@@ -9,7 +9,7 @@ This script is designed to be run:
   - locally, for testing: `python scripts/fetch_data.py`
   - on a schedule via GitHub Actions (see .github/workflows/update-data.yml)
 
-NOTE ON SCOPE (be honest about what this does and doesn't do):
+NOTE ON SCOPE (be honest about what this does and does not do):
   - yfinance gives reliable price data and *some* fundamental ratios
     (trailing P/E, P/B, market cap, dividend yield) straight from Yahoo.
   - It does NOT give sector-specific figures like NIM, GNPA, CAR, or
