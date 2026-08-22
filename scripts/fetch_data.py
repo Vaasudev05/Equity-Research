@@ -1,22 +1,12 @@
-fetch_data.py
---------------
-Step 2 of the personal stock research dashboard build:
-Pulls price history (multiple ranges) + key ratios for every ticker in
-watchlist.json via yfinance (free, no API key needed), and writes the
-results to /data as JSON (one file per ticker) + a combined CSV summary.
-
-This script is designed to be run:
-  - locally, for testing: `python scripts/fetch_data.py`
-  - on a schedule via GitHub Actions (see .github/workflows/update-data.yml)
-
-NOTE ON SCOPE (be honest about what this does and does not do):
-  - yfinance gives reliable price data and *some* fundamental ratios
-    (trailing P/E, P/B, market cap, dividend yield) straight from Yahoo.
-  - It does NOT give sector-specific figures like NIM, GNPA, CAR, or
-    brokerage consensus targets -- those need a separate pipeline
-    (financial-statement scraping / manual entry / document upload),
-    as discussed. This script is the foundation layer only.
-"""
+# fetch_data.py
+# Pulls price history and key ratios for the watchlist via yfinance,
+# and saves results to /data as JSON files plus a summary CSV.
+# Run locally with: python scripts/fetch_data.py
+# Also runs automatically via GitHub Actions on a schedule.
+#
+# SCOPE NOTE: yfinance gives price data and some ratios (P/E, P/B,
+# market cap, dividend yield). It does not give NIM, GNPA, CAR or
+# brokerage targets -- those need a separate pipeline added later.
 
 import json
 import os
@@ -47,13 +37,14 @@ RANGE_CONFIG = {
 
 
 def load_watchlist():
+    # Reads watchlist.json and returns the list of tracked tickers.
     with open(WATCHLIST_PATH, "r") as f:
         config = json.load(f)
     return config["watchlist"]
 
 
 def fetch_price_ranges(ticker_obj):
-    """Fetch OHLC data for every range defined in RANGE_CONFIG."""
+    # Fetch OHLC data for every range defined in RANGE_CONFIG.
     ranges_out = {}
     for range_key, params in RANGE_CONFIG.items():
         try:
@@ -69,18 +60,20 @@ def fetch_price_ranges(ticker_obj):
             ranges_out[range_key] = hist[
                 [date_col, "Open", "High", "Low", "Close", "Volume"]
             ].to_dict(orient="records")
-        except Exception as exc:  # noqa: BLE001
-            print(f"  [warn] range '{range_key}' failed: {exc}")
+        except Exception as exc:
+            print("  [warn] range failed: " + range_key + " -- " + str(exc))
             ranges_out[range_key] = []
     return ranges_out
 
 
 def fetch_key_ratios(ticker_obj):
-   # Pull whatever fundamental ratios yfinance exposes. Values will be missing for many Indian mid or small caps -- this is expected and should be backfilled by the scraping layer later.
+    # Pull whatever fundamental ratios yfinance exposes. Values will be
+    # missing for many Indian mid or small caps -- this is expected and
+    # should be backfilled by the scraping layer later.
     try:
         info = ticker_obj.info
-    except Exception as exc:  # noqa: BLE001
-        print(f"  [warn] .info fetch failed: {exc}")
+    except Exception as exc:
+        print("  [warn] info fetch failed: " + str(exc))
         info = {}
 
     return {
@@ -108,13 +101,13 @@ def main():
 
     for entry in watchlist:
         ticker_symbol = entry["ticker"]
-        print(f"Fetching {ticker_symbol} ({entry['name']})...")
+        print("Fetching " + ticker_symbol + " (" + entry["name"] + ")...")
         try:
             ticker_obj = yf.Ticker(ticker_symbol)
             ranges = fetch_price_ranges(ticker_obj)
             ratios = fetch_key_ratios(ticker_obj)
-        except Exception as exc:  # noqa: BLE001
-            print(f"  [error] skipping {ticker_symbol}: {exc}")
+        except Exception as exc:
+            print("  [error] skipping " + ticker_symbol + ": " + str(exc))
             continue
 
         record = {
@@ -126,7 +119,7 @@ def main():
             "price_ranges": ranges,
         }
 
-        out_path = os.path.join(PRICES_DIR, f"{ticker_symbol.replace('.', '_')}.json")
+        out_path = os.path.join(PRICES_DIR, ticker_symbol.replace(".", "_") + ".json")
         with open(out_path, "w") as f:
             json.dump(record, f, indent=2)
 
@@ -147,9 +140,9 @@ def main():
 
     if summary_rows:
         pd.DataFrame(summary_rows).to_csv(SUMMARY_CSV_PATH, index=False)
-        print(f"\nWrote summary for {len(summary_rows)} tickers to {SUMMARY_CSV_PATH}")
+        print("Wrote summary for " + str(len(summary_rows)) + " tickers to " + SUMMARY_CSV_PATH)
     else:
-        print("\n[warn] No data fetched for any ticker.")
+        print("[warn] No data fetched for any ticker.")
         sys.exit(1)
 
 
