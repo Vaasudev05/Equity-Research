@@ -1,0 +1,31 @@
+{
+  "watchlist": [
+    { "ticker": "BAJAJHFL.NS", "name": "Bajaj Housing Finance", "sector": "lender" },
+    { "ticker": "HUDCO.NS", "name": "HUDCO", "sector": "lender" },
+    { "ticker": "IDFCFIRSTB.NS", "name": "IDFC First Bank", "sector": "bank" },
+    { "ticker": "LICHSGFIN.NS", "name": "LIC Housing Finance", "sector": "lender" },
+    { "ticker": "PNBHOUSING.NS", "name": "PNB Housing Finance", "sector": "lender" },
+    { "ticker": "CANFINHOME.NS", "name": "Can Fin Homes", "sector": "lender" },
+    { "ticker": "PFC.NS", "name": "Power Finance Corporation", "sector": "lender" },
+    { "ticker": "RECLTD.NS", "name": "REC Limited", "sector": "lender" },
+    { "ticker": "IRFC.NS", "name": "Indian Railway Finance Corp", "sector": "lender" },
+    { "ticker": "IREDA.NS", "name": "IREDA", "sector": "lender" },
+    { "ticker": "BEL.NS", "name": "Bharat Electronics", "sector": "industrial" },
+    { "ticker": "BPCL.NS", "name": "Bharat Petroleum", "sector": "energy" },
+    { "ticker": "HINDPETRO.NS", "name": "Hindustan Petroleum", "sector": "energy" },
+    { "ticker": "NHPC.NS", "name": "NHPC", "sector": "power" },
+    { "ticker": "SJVN.NS", "name": "SJVN", "sector": "power" },
+    { "ticker": "LEMONTREE.NS", "name": "Lemon Tree Hotels", "sector": "hospitality" },
+    { "ticker": "SUZLON.NS", "name": "Suzlon Energy", "sector": "industrial" },
+    { "ticker": "COALINDIA.NS", "name": "Coal India", "sector": "mining" }
+  ],
+  "sector_ratio_notes": {
+    "lender": ["NIM", "GNPA", "NNPA", "CAR/CRAR", "D/E", "ROA", "ROE"],
+    "bank": ["NIM", "GNPA", "NNPA", "CASA", "D/E", "ROA", "ROE"],
+    "industrial": ["Order book", "OPM", "ROCE"],
+    "energy": ["GRM (gross refining margin)", "Inventory losses/gains", "OPM"],
+    "power": ["PLF (plant load factor)", "Regulated equity ROE", "D/E"],
+    "hospitality": ["Occupancy rate", "ARR (average room rate)", "RevPAR"],
+    "mining": ["Realization per tonne", "Volume growth", "OPM"]
+  }
+}
