@@ -76,10 +76,7 @@ def fetch_price_ranges(ticker_obj):
 
 
 def fetch_key_ratios(ticker_obj):
-    """Pull whatever fundamental ratios yfinance exposes.
-    Values will be missing (None) for many Indian mid/small caps --
-    that's expected and should be backfilled by the scraping layer later.
-    """
+   # Pull whatever fundamental ratios yfinance exposes. Values will be missing for many Indian mid or small caps -- this is expected and should be backfilled by the scraping layer later.
     try:
         info = ticker_obj.info
     except Exception as exc:  # noqa: BLE001
