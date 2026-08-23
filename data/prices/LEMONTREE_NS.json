@@ -2,7 +2,7 @@
   "ticker": "LEMONTREE.NS",
   "name": "Lemon Tree Hotels",
   "sector": "hospitality",
-  "fetched_at": "2026-08-22T17:28:23.237265+00:00",
+  "fetched_at": "2026-08-23T04:02:06.306127+00:00",
   "ratios": {
     "market_cap": 85780856832,
     "trailing_pe": 36.474747,
@@ -16,7 +16,11 @@
     "52_week_low": 99.61,
     "current_price": 108.33,
     "sector": "Consumer Cyclical",
-    "industry": "Lodging"
+    "industry": "Lodging",
+    "business_summary": "Lemon Tree Hotels Limited, together with its subsidiaries, engages in the hotel business in India. The company also operates hotel chains, owns, leases, operates, franchises hotels. It provides housing rental, digital transformation services. The company operates hotels in India and internationally under various brand names, including Aurika Hotels and Resorts, Lemon Tree Premier, Lemon Tree Hotels, Red Fox Hotels, Keys Prima, Keys Select, and Keys Lite. Lemon Tree Hotels Limited was incorporated in 1992 and is based in New Delhi, India.",
+    "website": "https://www.lemontreehotels.com",
+    "country": "India",
+    "full_time_employees": null
   },
   "price_ranges": {
     "1d": [
@@ -1228,7 +1232,7 @@
         "High": 108.77999877929688,
         "Low": 108.30999755859375,
         "Close": 108.75,
-        "Volume": 80568
+        "Volume": 159205
       },
       {
         "Datetime": "2026-08-20 09:30:00+05:30",

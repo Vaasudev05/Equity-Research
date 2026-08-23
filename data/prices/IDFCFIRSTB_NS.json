@@ -2,9 +2,9 @@
   "ticker": "IDFCFIRSTB.NS",
   "name": "IDFC First Bank",
   "sector": "bank",
-  "fetched_at": "2026-08-22T17:28:23.237265+00:00",
+  "fetched_at": "2026-08-23T04:02:06.306127+00:00",
   "ratios": {
-    "market_cap": 747516395520,
+    "market_cap": 747890802688,
     "trailing_pe": 33.49421,
     "forward_pe": 12.854804,
     "price_to_book": 1.5741245,
@@ -16,7 +16,11 @@
     "52_week_low": 58.08,
     "current_price": 86.75,
     "sector": "Financial Services",
-    "industry": "Banks - Regional"
+    "industry": "Banks - Regional",
+    "business_summary": "IDFC First Bank Limited provides various banking and financial services in India. It operates through the Treasury, Corporate and Wholesale Banking, Retail Banking, and Other Banking Business segments. The company offers treasury and forex solutions, including correspondent banking, FX, cross-border swift, government bonds and strips, liberalized remittance scheme, and external commercial borrowing solutions, as well as treasury solutions comprising forwards, options, and swaps. It also provides retail lending solutions, such as home loans, vehicle loans, consumer loans, education loans, personal loans, used car loans, gold loans, rural finance, and tractor finance; SME lending solutions that consist of loan against property, business banking, working capital loans, commercial vehicle loans, micro enterprise loans, trade advance, and startup banking; CASA and fixed deposits, which include current accounts, savings accounts, fixed deposits, nostro/vostro accounts, overdrafts, corporate salary accounts, accounts for ONDC, and escrow account; and NRI Banking that comprises NRE accounts, NRO accounts, seafarer accounts, FCNR deposits, and NRE/NRO deposits. In addition, the company offers wealth management and distribution solutions, including distribution of life insurance, general insurance, credit shield, health insurance, mutual funds, and AIFs; credit cards; and FASTag, such as tag issuer, toll acquirer, toll, parking, and fuel solutions. Further, it provides trade finance solutions that consist of letters of credit and discounting, bank guarantee, buyer's credit/SBLC, parking credit in foreign currency and INR, remittances, and pre and post shipment finance; supply chain financing; and transaction banking and CMS solutions. The company was formerly known as IDFC Bank Limited and changed its name to IDFC First Bank Limited in January 2019. IDFC First Bank Limited was founded in 1997 and is headquartered in Mumbai, India.",
+    "website": "https://www.idfcfirst.bank.in",
+    "country": "India",
+    "full_time_employees": 43059
   },
   "price_ranges": {
     "1d": [
@@ -1204,7 +1208,7 @@
         "High": 85.48999786376953,
         "Low": 85.30999755859375,
         "Close": 85.48999786376953,
-        "Volume": 163457
+        "Volume": 0
       },
       {
         "Datetime": "2026-08-20 09:15:00+05:30",
@@ -1212,7 +1216,7 @@
         "High": 86.06999969482422,
         "Low": 85.5999984741211,
         "Close": 86.01000213623047,
-        "Volume": 519375
+        "Volume": 1238026
       },
       {
         "Datetime": "2026-08-20 09:30:00+05:30",

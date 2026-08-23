@@ -2,7 +2,7 @@
   "ticker": "BAJAJHFL.NS",
   "name": "Bajaj Housing Finance",
   "sector": "lender",
-  "fetched_at": "2026-08-22T17:28:23.237265+00:00",
+  "fetched_at": "2026-08-23T04:02:06.306127+00:00",
   "ratios": {
     "market_cap": 706686943232,
     "trailing_pe": 26.26935,
@@ -16,7 +16,11 @@
     "52_week_low": 72.65,
     "current_price": 84.85,
     "sector": "Financial Services",
-    "industry": "Mortgage Finance"
+    "industry": "Mortgage Finance",
+    "business_summary": "Bajaj Housing Finance Limited provides housing finance services in India. It offers finance to individuals and corporate entities for the purchase and renovation of homes or commercial spaces. The company also provides loans against property for business or personal needs, as well as working capital for business expansion purposes. In addition, it offers finance to developers engaged in the construction of residential and commercial properties, as well as leases rental discounting to developers and high-net-worth individuals, real estate investment trusts, private equities, sovereign wealth funds, MNC funds, and corporates and commercial developers. Bajaj Housing Finance Limited was formerly known as Bajaj Financial Solutions Limited and changed its name to Bajaj Housing Finance Limited in November 2014. The company was incorporated in 2008 and is headquartered in Pune, India. Bajaj Housing Finance Limited is a subsidiary of Bajaj Finance Limited.",
+    "website": "https://www.bajajhousingfinance.in",
+    "country": "India",
+    "full_time_employees": null
   },
   "price_ranges": {
     "1d": [

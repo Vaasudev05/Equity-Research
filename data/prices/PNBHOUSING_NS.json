@@ -2,7 +2,7 @@
   "ticker": "PNBHOUSING.NS",
   "name": "PNB Housing Finance",
   "sector": "lender",
-  "fetched_at": "2026-08-22T17:28:23.237265+00:00",
+  "fetched_at": "2026-08-23T04:02:06.306127+00:00",
   "ratios": {
     "market_cap": 304968400896,
     "trailing_pe": 13.192426,
@@ -16,7 +16,11 @@
     "52_week_low": 729.6,
     "current_price": 1170.3,
     "sector": "Financial Services",
-    "industry": "Mortgage Finance"
+    "industry": "Mortgage Finance",
+    "business_summary": "PNB Housing Finance Limited operates as a housing finance company in India. It offers loans to individuals and corporate bodies for purchase, construction, repair, and upgradation of houses; loans for commercial space, and loans against property, as well as for purchase of residential plots; and home loans, property-related services, and fixed deposits. The company was incorporated in 1988 and is based in Gurugram, India.",
+    "website": "https://www.pnbhousing.com",
+    "country": "India",
+    "full_time_employees": 2355
   },
   "price_ranges": {
     "1d": [
@@ -1192,7 +1196,7 @@
       },
       {
         "Datetime": "2026-08-19 15:15:00+05:30",
-        "Open": 1175.199951171875,
+        "Open": 1174.0,
         "High": 1175.199951171875,
         "Low": 1174.0,
         "Close": 1174.0,

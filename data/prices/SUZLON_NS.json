@@ -2,7 +2,7 @@
   "ticker": "SUZLON.NS",
   "name": "Suzlon Energy",
   "sector": "industrial",
-  "fetched_at": "2026-08-22T17:28:23.237265+00:00",
+  "fetched_at": "2026-08-23T04:02:06.306127+00:00",
   "ratios": {
     "market_cap": 642065432576,
     "trailing_pe": 20.397379,
@@ -16,7 +16,11 @@
     "52_week_low": 38.19,
     "current_price": 46.71,
     "sector": "Industrials",
-    "industry": "Specialty Industrial Machinery"
+    "industry": "Specialty Industrial Machinery",
+    "business_summary": "Suzlon Energy Limited, together with its subsidiaries, manufactures and sells wind turbine generators and related components in India and internationally. The company operates through the WTG, Foundry & Forging, O&M services, and Others segments. It offers onshore wind turbine generators with capacities ranging from 2 MW to 6 MW, and classic fleet turbines; and services including project development through its RE DevCo business, energy storage solutions, and renewable energy asset management. The company also provides operation and maintenance services for wind turbine generators, as well as project execution, procurement, and marketing services. In addition, it is involved in the sale/sub-lease of land; manufacture and sale of forging rings and casting articles, as well as power generation and evacuation infrastructure facilities. The company was incorporated in 1995 and is headquartered in Pune, India.",
+    "website": "https://www.suzlon.com",
+    "country": "India",
+    "full_time_employees": 8600
   },
   "price_ranges": {
     "1d": [
@@ -1200,7 +1204,7 @@
       },
       {
         "Datetime": "2026-08-19 15:15:00+05:30",
-        "Open": 46.790000915527344,
+        "Open": 46.77000045776367,
         "High": 46.790000915527344,
         "Low": 46.77000045776367,
         "Close": 46.77000045776367,
