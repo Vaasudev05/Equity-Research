@@ -90,6 +90,10 @@ def fetch_key_ratios(ticker_obj):
         "current_price": info.get("currentPrice") or info.get("regularMarketPrice"),
         "sector": info.get("sector"),
         "industry": info.get("industry"),
+        "business_summary": info.get("longBusinessSummary"),
+        "website": info.get("website"),
+        "country": info.get("country"),
+        "full_time_employees": info.get("fullTimeEmployees"),
     }
 
 
