@@ -450,6 +450,7 @@
 const GITHUB_USER = "Vaasudev05";
 const GITHUB_REPO = "Equity-Research";
 const BRANCH = "main";
+const API_BASE = "https://equity-research-gold.vercel.app";
 /* ============================================================ */
 
 const RAW_BASE = "https://raw.githubusercontent.com/" + GITHUB_USER + "/" + GITHUB_REPO + "/" + BRANCH;
@@ -485,13 +486,13 @@ function fmtPct(n) {
 
 async function loadWatchlist() {
   try {
-    const res = await fetch(RAW_BASE + "/watchlist.json");
+    const res = await fetch(RAW_BASE + "/companies.json");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
-    watchlist = data.watchlist;
-    statusEl.textContent = watchlist.length + " companies tracked";
+    watchlist = data.companies;
+    statusEl.textContent = watchlist.length + " NSE companies available";
   } catch (err) {
-    statusEl.textContent = "Could not load watchlist — check GITHUB_USER/REPO config";
+    statusEl.textContent = "Could not load company list — check GITHUB_USER/REPO config";
     console.error(err);
   }
 }
@@ -505,11 +506,11 @@ function renderDropdown(filtered) {
   filtered.slice(0, 12).forEach(function (entry) {
     const item = document.createElement("div");
     item.className = "search-item";
-    item.innerHTML = '<span class="name">' + entry.name + '</span><span class="sector">' + entry.sector + '</span>';
+    item.innerHTML = '<span class="name">' + entry.name + '</span><span class="sector">' + entry.ticker.replace(".NS", "") + '</span>';
     item.addEventListener("click", function () {
       searchInput.value = entry.name;
       dropdown.classList.remove("open");
-      selectTicker(entry.ticker);
+      selectTicker(entry.ticker, entry.name);
     });
     dropdown.appendChild(item);
   });
@@ -529,19 +530,59 @@ document.addEventListener("click", function (e) {
   if (!e.target.closest(".search-wrap")) dropdown.classList.remove("open");
 });
 
-async function selectTicker(ticker) {
+async function selectTicker(ticker, fallbackName) {
   statusEl.textContent = "Loading " + ticker + "...";
-  const fileName = ticker.replace(/\./g, "_") + ".json";
+  emptyState.style.display = "none";
+  dashboard.classList.remove("visible");
+
   try {
-    const res = await fetch(RAW_BASE + "/data/prices/" + fileName);
+    const res = await fetch(API_BASE + "/api/index?mode=ratios&ticker=" + encodeURIComponent(ticker));
     if (!res.ok) throw new Error("HTTP " + res.status);
-    currentRecord = await res.json();
-    statusEl.textContent = watchlist.length + " companies tracked";
+    const ratios = await res.json();
+    if (ratios.error) throw new Error(ratios.error);
+
+    currentRecord = {
+      ticker: ticker,
+      name: ratios.name || fallbackName || ticker,
+      sector: ratios.sector || "—",
+      fetched_at: new Date().toISOString(),
+      ratios: ratios,
+      price_ranges: {},
+    };
+
+    statusEl.textContent = watchlist.length + " NSE companies available";
     renderDashboard();
+    await loadPriceRange(currentRange);
   } catch (err) {
     statusEl.textContent = "Could not load data for " + ticker;
     console.error(err);
   }
+}
+
+async function loadPriceRange(range) {
+  if (!currentRecord) return;
+  if (currentRecord.price_ranges[range]) {
+    renderChart();
+    return;
+  }
+  const chartPanel = document.getElementById("chart-svg");
+  const emptyMsg = document.getElementById("chart-empty");
+  chartPanel.style.display = "none";
+  emptyMsg.style.display = "block";
+  emptyMsg.textContent = "Loading " + RANGE_LABELS[range] + " price data...";
+
+  try {
+    const url = API_BASE + "/api/index?mode=prices&ticker=" + encodeURIComponent(currentRecord.ticker) + "&range=" + range;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    currentRecord.price_ranges[range] = data.rows || [];
+  } catch (err) {
+    currentRecord.price_ranges[range] = [];
+    console.error(err);
+  }
+  emptyMsg.textContent = "No price data available for this range.";
+  renderChart();
 }
 
 function renderDashboard() {
@@ -557,7 +598,6 @@ function renderDashboard() {
 
   renderRatios();
   renderRangeButtons();
-  renderChart();
   renderPestlePlaceholder();
   renderAbout();
 }
@@ -569,7 +609,7 @@ function renderAbout() {
     summaryEl.textContent = r.business_summary;
     summaryEl.classList.remove("na");
   } else {
-    summaryEl.textContent = "Business description not available yet — re-run fetch_data.py after adding the business_summary field (see Step-7 follow-up) to populate this.";
+    summaryEl.textContent = "Business description not available from Yahoo Finance for this company.";
     summaryEl.classList.add("na");
   }
 
@@ -626,7 +666,7 @@ function renderRangeButtons() {
     btn.addEventListener("click", function () {
       currentRange = r;
       renderRangeButtons();
-      renderChart();
+      loadPriceRange(r);
     });
     container.appendChild(btn);
   });
