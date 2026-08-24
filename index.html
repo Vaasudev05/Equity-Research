@@ -201,8 +201,76 @@
   .range-btn:hover { border-color: var(--accent-dim); color: var(--text); }
   .range-btn.active { background: var(--accent); border-color: var(--accent); color: #17130A; font-weight: 600; }
 
-  #chart-svg { width: 100%; height: 280px; display: block; }
+  #chart-svg { width: 100%; height: 320px; display: block; cursor: crosshair; }
   #chart-empty { color: var(--text-dim); font-size: 13px; text-align: center; padding: 60px 0; }
+
+  .axis-line { stroke: var(--border); stroke-width: 1; }
+  .axis-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    fill: var(--text-dim);
+  }
+  .grid-line { stroke: var(--border); stroke-width: 1; stroke-dasharray: 2,3; }
+
+  .crosshair-line {
+    stroke: var(--text-dim);
+    stroke-width: 1;
+    stroke-dasharray: 3,3;
+    pointer-events: none;
+    display: none;
+  }
+  .crosshair-dot {
+    pointer-events: none;
+    display: none;
+  }
+  .crosshair-tooltip-bg {
+    fill: var(--panel-alt);
+    stroke: var(--border);
+    stroke-width: 1;
+    pointer-events: none;
+    display: none;
+  }
+  .crosshair-tooltip-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    fill: var(--text);
+    pointer-events: none;
+    display: none;
+  }
+
+  .about-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 900px) { .about-grid { grid-template-columns: 1fr; } }
+  .about-summary {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .about-summary.na { color: var(--text-dim); font-style: italic; }
+  .about-facts { display: flex; flex-direction: column; gap: 14px; }
+  .about-fact .label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 3px;
+  }
+  .about-fact .value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+  }
+  .about-fact .value a { color: var(--accent); text-decoration: none; }
+  .about-fact .value a:hover { text-decoration: underline; }
 
   .ratio-grid {
     display: grid;
@@ -326,13 +394,21 @@
           <span>Price</span>
           <div class="range-buttons" id="range-buttons"></div>
         </div>
-        <svg id="chart-svg" viewBox="0 0 800 280" preserveAspectRatio="none"></svg>
+        <svg id="chart-svg" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet"></svg>
         <div id="chart-empty" style="display:none;">No price data available for this range.</div>
       </div>
 
       <div class="panel">
         <div class="panel-title"><span>Key Ratios</span></div>
         <div class="ratio-grid" id="ratio-grid"></div>
+      </div>
+    </div>
+
+    <div class="about-panel">
+      <div class="panel-title"><span>About</span></div>
+      <div class="about-grid">
+        <div class="about-summary" id="about-summary">—</div>
+        <div class="about-facts" id="about-facts"></div>
       </div>
     </div>
 
@@ -374,6 +450,7 @@
 const GITHUB_USER = "Vaasudev05";
 const GITHUB_REPO = "Equity-Research";
 const BRANCH = "main";
+const API_BASE = "https://vercel.com/vaasudev6/equity-research";
 /* ============================================================ */
 
 const RAW_BASE = "https://raw.githubusercontent.com/" + GITHUB_USER + "/" + GITHUB_REPO + "/" + BRANCH;
@@ -409,13 +486,13 @@ function fmtPct(n) {
 
 async function loadWatchlist() {
   try {
-    const res = await fetch(RAW_BASE + "/watchlist.json");
+    const res = await fetch(RAW_BASE + "/companies.json");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
-    watchlist = data.watchlist;
-    statusEl.textContent = watchlist.length + " companies tracked";
+    watchlist = data.companies;
+    statusEl.textContent = watchlist.length + " NSE companies available";
   } catch (err) {
-    statusEl.textContent = "Could not load watchlist — check GITHUB_USER/REPO config";
+    statusEl.textContent = "Could not load company list — check GITHUB_USER/REPO config";
     console.error(err);
   }
 }
@@ -429,11 +506,11 @@ function renderDropdown(filtered) {
   filtered.slice(0, 12).forEach(function (entry) {
     const item = document.createElement("div");
     item.className = "search-item";
-    item.innerHTML = '<span class="name">' + entry.name + '</span><span class="sector">' + entry.sector + '</span>';
+    item.innerHTML = '<span class="name">' + entry.name + '</span><span class="sector">' + entry.ticker.replace(".NS", "") + '</span>';
     item.addEventListener("click", function () {
       searchInput.value = entry.name;
       dropdown.classList.remove("open");
-      selectTicker(entry.ticker);
+      selectTicker(entry.ticker, entry.name);
     });
     dropdown.appendChild(item);
   });
@@ -453,19 +530,59 @@ document.addEventListener("click", function (e) {
   if (!e.target.closest(".search-wrap")) dropdown.classList.remove("open");
 });
 
-async function selectTicker(ticker) {
+async function selectTicker(ticker, fallbackName) {
   statusEl.textContent = "Loading " + ticker + "...";
-  const fileName = ticker.replace(/\./g, "_") + ".json";
+  emptyState.style.display = "none";
+  dashboard.classList.remove("visible");
+
   try {
-    const res = await fetch(RAW_BASE + "/data/prices/" + fileName);
+    const res = await fetch(API_BASE + "/api/index?mode=ratios&ticker=" + encodeURIComponent(ticker));
     if (!res.ok) throw new Error("HTTP " + res.status);
-    currentRecord = await res.json();
-    statusEl.textContent = watchlist.length + " companies tracked";
+    const ratios = await res.json();
+    if (ratios.error) throw new Error(ratios.error);
+
+    currentRecord = {
+      ticker: ticker,
+      name: ratios.name || fallbackName || ticker,
+      sector: ratios.sector || "—",
+      fetched_at: new Date().toISOString(),
+      ratios: ratios,
+      price_ranges: {},
+    };
+
+    statusEl.textContent = watchlist.length + " NSE companies available";
     renderDashboard();
+    await loadPriceRange(currentRange);
   } catch (err) {
     statusEl.textContent = "Could not load data for " + ticker;
     console.error(err);
   }
+}
+
+async function loadPriceRange(range) {
+  if (!currentRecord) return;
+  if (currentRecord.price_ranges[range]) {
+    renderChart();
+    return;
+  }
+  const chartPanel = document.getElementById("chart-svg");
+  const emptyMsg = document.getElementById("chart-empty");
+  chartPanel.style.display = "none";
+  emptyMsg.style.display = "block";
+  emptyMsg.textContent = "Loading " + RANGE_LABELS[range] + " price data...";
+
+  try {
+    const url = API_BASE + "/api/index?mode=prices&ticker=" + encodeURIComponent(currentRecord.ticker) + "&range=" + range;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    currentRecord.price_ranges[range] = data.rows || [];
+  } catch (err) {
+    currentRecord.price_ranges[range] = [];
+    console.error(err);
+  }
+  emptyMsg.textContent = "No price data available for this range.";
+  renderChart();
 }
 
 function renderDashboard() {
@@ -481,8 +598,38 @@ function renderDashboard() {
 
   renderRatios();
   renderRangeButtons();
-  renderChart();
   renderPestlePlaceholder();
+  renderAbout();
+}
+
+function renderAbout() {
+  const r = currentRecord.ratios;
+  const summaryEl = document.getElementById("about-summary");
+  if (r.business_summary) {
+    summaryEl.textContent = r.business_summary;
+    summaryEl.classList.remove("na");
+  } else {
+    summaryEl.textContent = "Business description not available from Yahoo Finance for this company.";
+    summaryEl.classList.add("na");
+  }
+
+  const facts = [
+    ["Sector", r.sector],
+    ["Industry", r.industry],
+    ["HQ Country", r.country],
+    ["Employees", r.full_time_employees ? fmtNumber(r.full_time_employees, 0) : null],
+    ["Website", r.website ? '<a href="' + r.website + '" target="_blank" rel="noopener">' + r.website.replace(/^https?:\/\//, "") + '</a>' : null],
+  ];
+  const factsEl = document.getElementById("about-facts");
+  factsEl.innerHTML = "";
+  facts.forEach(function (pair) {
+    const label = pair[0];
+    const value = pair[1];
+    const div = document.createElement("div");
+    div.className = "about-fact";
+    div.innerHTML = '<div class="label">' + label + '</div><div class="value">' + (value || '<span style="color:var(--neutral)">N/A</span>') + '</div>';
+    factsEl.appendChild(div);
+  });
 }
 
 function renderRatios() {
@@ -519,11 +666,29 @@ function renderRangeButtons() {
     btn.addEventListener("click", function () {
       currentRange = r;
       renderRangeButtons();
-      renderChart();
+      loadPriceRange(r);
     });
     container.appendChild(btn);
   });
 }
+
+function getRowDate(row) {
+  return row.Date !== undefined ? row.Date : row.Datetime;
+}
+
+function formatAxisDate(dateStr, range) {
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr.slice(0, 10);
+  if (range === "1d" || range === "1wk") {
+    return d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+  }
+  if (range === "1mo" || range === "3mo" || range === "6mo") {
+    return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+  }
+  return d.toLocaleDateString("en-IN", { month: "short", year: "2-digit" });
+}
+
+let chartLayout = null;
 
 function renderChart() {
   const svg = document.getElementById("chart-svg");
@@ -533,6 +698,7 @@ function renderChart() {
   if (rows.length < 2) {
     svg.style.display = "none";
     emptyMsg.style.display = "block";
+    chartLayout = null;
     return;
   }
   svg.style.display = "block";
@@ -541,30 +707,125 @@ function renderChart() {
   const closes = rows.map(function (row) { return row.Close; });
   const min = Math.min.apply(null, closes);
   const max = Math.max.apply(null, closes);
-  const range = (max - min) || 1;
-  const w = 800, h = 280, pad = 10;
+  const valRange = (max - min) || 1;
 
-  const points = closes.map(function (c, i) {
-    const x = pad + (i / (closes.length - 1)) * (w - pad * 2);
-    const y = pad + (1 - (c - min) / range) * (h - pad * 2);
-    return x + "," + y;
-  });
+  const w = 800, h = 320;
+  const marginLeft = 55, marginRight = 14, marginTop = 14, marginBottom = 30;
+  const plotW = w - marginLeft - marginRight;
+  const plotH = h - marginTop - marginBottom;
+
+  function xForIndex(i) {
+    return marginLeft + (i / (closes.length - 1)) * plotW;
+  }
+  function yForVal(v) {
+    return marginTop + (1 - (v - min) / valRange) * plotH;
+  }
+
+  const points = closes.map(function (c, i) { return xForIndex(i) + "," + yForVal(c); });
 
   const isUp = closes[closes.length - 1] >= closes[0];
   const lineColor = isUp ? "#2FBF71" : "#E5484D";
 
   const areaPoints = points.slice();
-  areaPoints.push((w - pad) + "," + (h - pad));
-  areaPoints.push(pad + "," + (h - pad));
+  areaPoints.push(xForIndex(closes.length - 1) + "," + (marginTop + plotH));
+  areaPoints.push(xForIndex(0) + "," + (marginTop + plotH));
+
+  // Y axis: 4 gridlines/labels from min to max
+  const yTickCount = 4;
+  let yTicksSvg = "";
+  for (let t = 0; t <= yTickCount; t++) {
+    const val = min + (valRange * t / yTickCount);
+    const y = yForVal(val);
+    yTicksSvg +=
+      '<line class="grid-line" x1="' + marginLeft + '" y1="' + y + '" x2="' + (w - marginRight) + '" y2="' + y + '" />' +
+      '<text class="axis-label" x="' + (marginLeft - 8) + '" y="' + (y + 3) + '" text-anchor="end">₹' + fmtNumber(val, 0) + '</text>';
+  }
+
+  // X axis: up to 6 evenly spaced date labels
+  const xTickCount = Math.min(6, rows.length);
+  let xTicksSvg = "";
+  for (let t = 0; t < xTickCount; t++) {
+    const idx = Math.round((t / (xTickCount - 1)) * (rows.length - 1));
+    const x = xForIndex(idx);
+    xTicksSvg +=
+      '<text class="axis-label" x="' + x + '" y="' + (h - marginBottom + 16) + '" text-anchor="middle">' +
+      formatAxisDate(getRowDate(rows[idx]), currentRange) + '</text>';
+  }
 
   svg.innerHTML =
     '<defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">' +
     '<stop offset="0%" stop-color="' + lineColor + '" stop-opacity="0.25"/>' +
     '<stop offset="100%" stop-color="' + lineColor + '" stop-opacity="0"/>' +
     '</linearGradient></defs>' +
+    yTicksSvg +
+    '<line class="axis-line" x1="' + marginLeft + '" y1="' + marginTop + '" x2="' + marginLeft + '" y2="' + (marginTop + plotH) + '" />' +
+    '<line class="axis-line" x1="' + marginLeft + '" y1="' + (marginTop + plotH) + '" x2="' + (w - marginRight) + '" y2="' + (marginTop + plotH) + '" />' +
+    xTicksSvg +
     '<polygon points="' + areaPoints.join(" ") + '" fill="url(#areaGrad)" />' +
-    '<polyline points="' + points.join(" ") + '" fill="none" stroke="' + lineColor + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />';
+    '<polyline points="' + points.join(" ") + '" fill="none" stroke="' + lineColor + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />' +
+    '<line class="crosshair-line" id="crosshair-v" x1="0" y1="' + marginTop + '" x2="0" y2="' + (marginTop + plotH) + '" />' +
+    '<circle class="crosshair-dot" id="crosshair-dot" r="4" fill="' + lineColor + '" stroke="#0B0E11" stroke-width="1.5" />' +
+    '<rect class="crosshair-tooltip-bg" id="crosshair-bg" width="118" height="38" rx="5" />' +
+    '<text class="crosshair-tooltip-text" id="crosshair-text-price" x="0" y="0"></text>' +
+    '<text class="crosshair-tooltip-text" id="crosshair-text-date" x="0" y="0" fill="var(--text-dim)"></text>';
+
+  chartLayout = { rows: rows, closes: closes, xForIndex: xForIndex, yForVal: yForVal, w: w, h: h, marginLeft: marginLeft, marginRight: marginRight, marginTop: marginTop, plotW: plotW };
 }
+
+function handleChartMouseMove(evt) {
+  if (!chartLayout) return;
+  const svg = document.getElementById("chart-svg");
+  const rect = svg.getBoundingClientRect();
+  const scaleX = chartLayout.w / rect.width;
+  const mouseXInSvg = (evt.clientX - rect.left) * scaleX;
+
+  const relX = Math.min(Math.max(mouseXInSvg - chartLayout.marginLeft, 0), chartLayout.plotW);
+  const fraction = relX / chartLayout.plotW;
+  const idx = Math.round(fraction * (chartLayout.closes.length - 1));
+  const clampedIdx = Math.min(Math.max(idx, 0), chartLayout.closes.length - 1);
+
+  const x = chartLayout.xForIndex(clampedIdx);
+  const y = chartLayout.yForVal(chartLayout.closes[clampedIdx]);
+  const price = chartLayout.closes[clampedIdx];
+  const dateLabel = formatAxisDate(getRowDate(chartLayout.rows[clampedIdx]), currentRange);
+
+  const vLine = document.getElementById("crosshair-v");
+  const dot = document.getElementById("crosshair-dot");
+  const bg = document.getElementById("crosshair-bg");
+  const textPrice = document.getElementById("crosshair-text-price");
+  const textDate = document.getElementById("crosshair-text-date");
+  if (!vLine) return;
+
+  vLine.setAttribute("x1", x); vLine.setAttribute("x2", x); vLine.style.display = "block";
+  dot.setAttribute("cx", x); dot.setAttribute("cy", y); dot.style.display = "block";
+
+  let bgX = x + 10;
+  if (bgX + 118 > chartLayout.w - chartLayout.marginRight) bgX = x - 128;
+  const bgY = Math.max(chartLayout.marginTop, Math.min(y - 25, chartLayout.h - 60));
+
+  bg.setAttribute("x", bgX); bg.setAttribute("y", bgY); bg.style.display = "block";
+  textPrice.setAttribute("x", bgX + 10); textPrice.setAttribute("y", bgY + 16);
+  textPrice.textContent = "₹" + fmtNumber(price);
+  textPrice.style.display = "block";
+  textDate.setAttribute("x", bgX + 10); textDate.setAttribute("y", bgY + 30);
+  textDate.textContent = dateLabel;
+  textDate.style.display = "block";
+}
+
+function handleChartMouseLeave() {
+  ["crosshair-v", "crosshair-dot", "crosshair-bg", "crosshair-text-price", "crosshair-text-date"].forEach(function (id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+}
+
+document.getElementById("chart-svg").addEventListener("mousemove", handleChartMouseMove);
+document.getElementById("chart-svg").addEventListener("mouseleave", handleChartMouseLeave);
+document.getElementById("chart-svg").addEventListener("touchmove", function (e) {
+  if (e.touches && e.touches[0]) {
+    handleChartMouseMove({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY });
+  }
+});
 
 function renderPestlePlaceholder() {
   const factors = [
