@@ -274,9 +274,9 @@
 
   .news-tab {
     position: fixed;
-    top: 50%;
+    top: 33%;
     right: 0;
-    transform: translateY(-50%);
+    transform: translateY(-50%) rotate(180deg);
     background: var(--panel-alt);
     border: 1px solid var(--border);
     border-right: none;
@@ -364,6 +364,147 @@
     font-size: 12.5px;
     text-align: center;
   }
+
+  .upload-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+
+  .period-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .field-group { display: flex; flex-direction: column; gap: 5px; }
+  .field-group label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .field-group select, .field-group input[type="text"] {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    outline: none;
+  }
+  .field-group select:focus, .field-group input:focus { border-color: var(--accent); }
+
+  .drop-zone {
+    border: 1.5px dashed var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    margin-bottom: 14px;
+  }
+  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: var(--panel-alt); }
+  .drop-zone .dz-sub { font-size: 11px; margin-top: 4px; color: var(--neutral); }
+
+  .file-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .file-row .file-name {
+    flex: 1;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .file-row select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 6px 8px;
+    border-radius: 5px;
+  }
+  .file-row .remove-btn {
+    background: none;
+    border: none;
+    color: var(--loss);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 2px 6px;
+  }
+
+  .save-bundle-btn {
+    background: var(--accent);
+    color: #17130A;
+    border: none;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .save-bundle-btn:disabled { background: var(--neutral); cursor: not-allowed; }
+
+  .saved-bundles { margin-top: 22px; border-top: 1px solid var(--border); padding-top: 16px; }
+  .saved-bundles-title {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+  .bundle-card {
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .bundle-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .bundle-period-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .bundle-files { font-size: 11.5px; color: var(--text-dim); line-height: 1.6; }
+  .bundle-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .bundle-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+  }
+  .bundle-btn.analyze { color: var(--accent); border-color: var(--accent-dim); }
+  .bundle-btn.analyze:disabled { color: var(--neutral); border-color: var(--border); cursor: not-allowed; }
+  .bundle-btn.delete:hover { color: var(--loss); border-color: var(--loss); }
 
   .ratio-grid {
     display: grid;
@@ -502,6 +643,48 @@
       <div class="about-grid">
         <div class="about-summary" id="about-summary">—</div>
         <div class="about-facts" id="about-facts"></div>
+      </div>
+    </div>
+
+    <div class="upload-panel">
+      <div class="panel-title"><span>Upload Financials &amp; Audit Report</span></div>
+
+      <div class="period-row">
+        <div class="field-group">
+          <label>Period Type</label>
+          <select id="period-type">
+            <option value="quarterly">Quarterly</option>
+            <option value="annual">Annual</option>
+          </select>
+        </div>
+        <div class="field-group" id="quarter-field">
+          <label>Quarter</label>
+          <select id="period-quarter">
+            <option value="Q1">Q1</option>
+            <option value="Q2">Q2</option>
+            <option value="Q3">Q3</option>
+            <option value="Q4">Q4</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Fiscal Year</label>
+          <input type="text" id="period-fy" placeholder="e.g. FY27" />
+        </div>
+      </div>
+
+      <div class="drop-zone" id="drop-zone">
+        <div>Drag PDFs here, or click to browse</div>
+        <div class="dz-sub">Upload as many files as this period needs — combined annual reports or separate financials/audit PDFs both work.</div>
+        <input type="file" id="file-input" accept="application/pdf" multiple style="display:none;" />
+      </div>
+
+      <div id="file-list"></div>
+
+      <button class="save-bundle-btn" id="save-bundle-btn" disabled>Save this period's documents</button>
+
+      <div class="saved-bundles">
+        <div class="saved-bundles-title">Uploaded Periods</div>
+        <div id="saved-bundles-list"></div>
       </div>
     </div>
 
@@ -654,6 +837,7 @@ async function selectTicker(ticker, fallbackName) {
     statusEl.textContent = watchlist.length + " NSE companies available";
     renderDashboard();
     await loadPriceRange(currentRange);
+    renderSavedBundles();
     if (newsDrawerOpen) {
       loadNews(currentRecord.name);
     }
@@ -1007,6 +1191,217 @@ function renderNews(items) {
     a.appendChild(img);
     a.appendChild(body);
     listEl.appendChild(a);
+  });
+}
+
+/* ===== Document upload storage (IndexedDB, per-browser only) ===== */
+const DB_NAME = "equity_dash_docs";
+const STORE_NAME = "bundles";
+let dbInstance = null;
+let pendingFiles = [];
+
+function openDocsDB() {
+  return new Promise(function (resolve, reject) {
+    if (dbInstance) { resolve(dbInstance); return; }
+    const request = indexedDB.open(DB_NAME, 1);
+    request.onupgradeneeded = function (event) {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: "id" });
+      }
+    };
+    request.onsuccess = function (event) {
+      dbInstance = event.target.result;
+      resolve(dbInstance);
+    };
+    request.onerror = function () { reject(request.error); };
+  });
+}
+
+function saveBundle(record) {
+  return openDocsDB().then(function (db) {
+    return new Promise(function (resolve, reject) {
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      tx.objectStore(STORE_NAME).put(record);
+      tx.oncomplete = function () { resolve(); };
+      tx.onerror = function () { reject(tx.error); };
+    });
+  });
+}
+
+function deleteBundle(id) {
+  return openDocsDB().then(function (db) {
+    return new Promise(function (resolve, reject) {
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      tx.objectStore(STORE_NAME).delete(id);
+      tx.oncomplete = function () { resolve(); };
+      tx.onerror = function () { reject(tx.error); };
+    });
+  });
+}
+
+function getBundlesForTicker(ticker) {
+  return openDocsDB().then(function (db) {
+    return new Promise(function (resolve, reject) {
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const request = tx.objectStore(STORE_NAME).getAll();
+      request.onsuccess = function () {
+        const all = request.result || [];
+        resolve(all.filter(function (r) { return r.ticker === ticker; }));
+      };
+      request.onerror = function () { reject(request.error); };
+    });
+  });
+}
+
+/* ===== Upload panel UI logic ===== */
+const periodTypeEl = document.getElementById("period-type");
+const quarterFieldEl = document.getElementById("quarter-field");
+const periodFyEl = document.getElementById("period-fy");
+const dropZoneEl = document.getElementById("drop-zone");
+const fileInputEl = document.getElementById("file-input");
+const fileListEl = document.getElementById("file-list");
+const saveBundleBtn = document.getElementById("save-bundle-btn");
+const savedBundlesListEl = document.getElementById("saved-bundles-list");
+
+periodTypeEl.addEventListener("change", function () {
+  quarterFieldEl.style.display = periodTypeEl.value === "quarterly" ? "flex" : "none";
+});
+
+dropZoneEl.addEventListener("click", function () { fileInputEl.click(); });
+dropZoneEl.addEventListener("dragover", function (e) {
+  e.preventDefault();
+  dropZoneEl.classList.add("drag-over");
+});
+dropZoneEl.addEventListener("dragleave", function () {
+  dropZoneEl.classList.remove("drag-over");
+});
+dropZoneEl.addEventListener("drop", function (e) {
+  e.preventDefault();
+  dropZoneEl.classList.remove("drag-over");
+  addFiles(e.dataTransfer.files);
+});
+fileInputEl.addEventListener("change", function () {
+  addFiles(fileInputEl.files);
+  fileInputEl.value = "";
+});
+
+function addFiles(fileList) {
+  Array.prototype.forEach.call(fileList, function (file) {
+    if (file.type !== "application/pdf") return;
+    pendingFiles.push({ file: file, tag: "financials" });
+  });
+  renderFileList();
+}
+
+function renderFileList() {
+  fileListEl.innerHTML = "";
+  pendingFiles.forEach(function (entry, idx) {
+    const row = document.createElement("div");
+    row.className = "file-row";
+
+    const nameEl = document.createElement("div");
+    nameEl.className = "file-name";
+    nameEl.textContent = entry.file.name;
+
+    const select = document.createElement("select");
+    select.innerHTML =
+      '<option value="financials">Financial Statements</option>' +
+      '<option value="audit">Audit Report</option>' +
+      '<option value="both">Both</option>';
+    select.value = entry.tag;
+    select.addEventListener("change", function () {
+      pendingFiles[idx].tag = select.value;
+    });
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "remove-btn";
+    removeBtn.textContent = "×";
+    removeBtn.addEventListener("click", function () {
+      pendingFiles.splice(idx, 1);
+      renderFileList();
+    });
+
+    row.appendChild(nameEl);
+    row.appendChild(select);
+    row.appendChild(removeBtn);
+    fileListEl.appendChild(row);
+  });
+  saveBundleBtn.disabled = pendingFiles.length === 0;
+}
+
+saveBundleBtn.addEventListener("click", function () {
+  if (!currentRecord || pendingFiles.length === 0) return;
+
+  const periodType = periodTypeEl.value;
+  const fy = periodFyEl.value.trim();
+  if (!fy) {
+    alert("Enter a fiscal year (e.g. FY27) before saving.");
+    return;
+  }
+  const quarter = periodType === "quarterly" ? document.getElementById("period-quarter").value : null;
+  const periodLabel = periodType === "quarterly" ? quarter + " " + fy : fy + " Annual";
+  const bundleId = currentRecord.ticker + "__" + periodType + "__" + (quarter || "") + "__" + fy;
+
+  const record = {
+    id: bundleId,
+    ticker: currentRecord.ticker,
+    periodType: periodType,
+    quarter: quarter,
+    fy: fy,
+    periodLabel: periodLabel,
+    savedAt: new Date().toISOString(),
+    files: pendingFiles.map(function (entry) {
+      return { name: entry.file.name, tag: entry.tag, blob: entry.file };
+    }),
+    analysis: null,
+  };
+
+  saveBundle(record).then(function () {
+    pendingFiles = [];
+    renderFileList();
+    periodFyEl.value = "";
+    renderSavedBundles();
+  }).catch(function (err) {
+    console.error(err);
+    alert("Could not save documents locally. Your browser storage may be full or restricted.");
+  });
+});
+
+function renderSavedBundles() {
+  if (!currentRecord) { savedBundlesListEl.innerHTML = ""; return; }
+  getBundlesForTicker(currentRecord.ticker).then(function (bundles) {
+    savedBundlesListEl.innerHTML = "";
+    if (bundles.length === 0) {
+      savedBundlesListEl.innerHTML = '<div style="color:var(--text-dim);font-size:12px;">No documents uploaded yet for this company.</div>';
+      return;
+    }
+    bundles.sort(function (a, b) { return a.periodLabel.localeCompare(b.periodLabel); });
+    bundles.forEach(function (bundle) {
+      const card = document.createElement("div");
+      card.className = "bundle-card";
+
+      const fileLines = bundle.files.map(function (f) {
+        const tagLabel = f.tag === "financials" ? "Financial Statements" : f.tag === "audit" ? "Audit Report" : "Both";
+        return f.name + " — " + tagLabel;
+      }).join("<br>");
+
+      card.innerHTML =
+        '<div class="bundle-card-header">' +
+        '<span class="bundle-period-label">' + bundle.periodLabel + '</span>' +
+        '</div>' +
+        '<div class="bundle-files">' + fileLines + '</div>' +
+        '<div class="bundle-actions">' +
+        '<button class="bundle-btn analyze" disabled title="Requires Claude API key setup — coming next">Analyze (not yet wired)</button>' +
+        '<button class="bundle-btn delete" data-id="' + bundle.id + '">Delete</button>' +
+        '</div>';
+
+      card.querySelector(".delete").addEventListener("click", function () {
+        deleteBundle(bundle.id).then(renderSavedBundles);
+      });
+
+      savedBundlesListEl.appendChild(card);
+    });
   });
 }
 
