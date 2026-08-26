@@ -365,93 +365,133 @@
     text-align: center;
   }
 
-  .upload-panel {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 22px;
-    margin-bottom: 20px;
-  }
-
-  .period-row {
+  .ph-title-row {
     display: flex;
-    gap: 12px;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
-  }
-  .field-group { display: flex; flex-direction: column; gap: 5px; }
-  .field-group label {
-    font-size: 11px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .field-group select, .field-group input[type="text"] {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    padding: 8px 10px;
-    border-radius: 6px;
-    outline: none;
-  }
-  .field-group select:focus, .field-group input:focus { border-color: var(--accent); }
-
-  .drop-zone {
-    border: 1.5px dashed var(--border);
-    border-radius: 8px;
-    padding: 24px;
-    text-align: center;
-    color: var(--text-dim);
-    font-size: 13px;
-    cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease;
-    margin-bottom: 14px;
-  }
-  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: var(--panel-alt); }
-  .drop-zone .dz-sub { font-size: 11px; margin-top: 4px; color: var(--neutral); }
-
-  .file-row {
-    display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 12px;
-    padding: 10px 12px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .ph-title-row .ph-title { margin-bottom: 0; }
+
+  .upload-trigger {
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .upload-trigger:hover { background: var(--accent); color: #17130A; }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 24px;
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .modal-close:hover { color: var(--text); }
+
+  .upload-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.4fr 1.2fr auto;
+    gap: 8px;
+    align-items: end;
     background: var(--panel-alt);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    margin-bottom: 8px;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
   }
-  .file-row .file-name {
-    flex: 1;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    color: var(--text);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .file-row select {
+  @media (max-width: 640px) { .upload-row { grid-template-columns: 1fr 1fr; } }
+
+  .upload-row .field-group label { font-size: 10px; }
+  .upload-row select {
     background: var(--bg);
     border: 1px solid var(--border);
     color: var(--text);
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    padding: 6px 8px;
+    font-size: 11.5px;
+    padding: 7px 8px;
     border-radius: 5px;
+    width: 100%;
   }
-  .file-row .remove-btn {
+  .row-drop-zone {
+    border: 1.5px dashed var(--border);
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 10.5px;
+    cursor: pointer;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .row-drop-zone.has-files { color: var(--accent); border-color: var(--accent-dim); }
+  .row-drop-zone.drag-over { border-color: var(--accent); background: var(--panel); }
+  .remove-row-btn {
     background: none;
     border: none;
     color: var(--loss);
     cursor: pointer;
-    font-size: 16px;
-    line-height: 1;
-    padding: 2px 6px;
+    font-size: 18px;
+    padding: 4px 8px;
   }
 
-  .save-bundle-btn {
+  .add-row-btn {
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 9px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+  }
+  .add-row-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
     background: var(--accent);
     color: #17130A;
     border: none;
@@ -646,57 +686,21 @@
       </div>
     </div>
 
-    <div class="upload-panel">
-      <div class="panel-title"><span>Upload Financials &amp; Audit Report</span></div>
-
-      <div class="period-row">
-        <div class="field-group">
-          <label>Period Type</label>
-          <select id="period-type">
-            <option value="quarterly">Quarterly</option>
-            <option value="annual">Annual</option>
-          </select>
-        </div>
-        <div class="field-group" id="quarter-field">
-          <label>Quarter</label>
-          <select id="period-quarter">
-            <option value="Q1">Q1</option>
-            <option value="Q2">Q2</option>
-            <option value="Q3">Q3</option>
-            <option value="Q4">Q4</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label>Fiscal Year</label>
-          <input type="text" id="period-fy" placeholder="e.g. FY27" />
-        </div>
-      </div>
-
-      <div class="drop-zone" id="drop-zone">
-        <div>Drag PDFs here, or click to browse</div>
-        <div class="dz-sub">Upload as many files as this period needs — combined annual reports or separate financials/audit PDFs both work.</div>
-        <input type="file" id="file-input" accept="application/pdf" multiple style="display:none;" />
-      </div>
-
-      <div id="file-list"></div>
-
-      <button class="save-bundle-btn" id="save-bundle-btn" disabled>Save this period's documents</button>
-
-      <div class="saved-bundles">
-        <div class="saved-bundles-title">Uploaded Periods</div>
-        <div id="saved-bundles-list"></div>
-      </div>
-    </div>
-
     <div class="placeholder-panel">
-      <div class="ph-title">Financials (3yr, QoQ / YoY) <span class="ph-badge">STEP 3 — NOT YET WIRED</span></div>
+      <div class="ph-title-row">
+        <div class="ph-title">Financials (3yr, QoQ / YoY) <span class="ph-badge">STEP 3 — NOT YET WIRED</span></div>
+        <button class="upload-trigger" data-open-upload-modal>UPLOAD FILES</button>
+      </div>
       <p>Balance Sheet, P&amp;L, and Cash Flow with YoY/QoQ color-coded comparison will render here once the
       financial-statement scraping layer is built.</p>
     </div>
 
     <div class="two-col">
       <div class="placeholder-panel">
-        <div class="ph-title">Auditor's Report <span class="ph-badge">STEP 6 — NOT YET WIRED</span></div>
+        <div class="ph-title-row">
+          <div class="ph-title">Auditor's Report <span class="ph-badge">STEP 6 — NOT YET WIRED</span></div>
+          <button class="upload-trigger" data-open-upload-modal>UPLOAD FILES</button>
+        </div>
         <p>Opinion type (Unmodified / Qualified / Adverse / Disclaimer) plus Key Audit Matters, Emphasis of Matter,
         and Other Matter summaries — auto-extracted when you upload an annual report PDF.</p>
       </div>
@@ -723,6 +727,26 @@
 <div class="news-drawer" id="news-drawer">
   <div class="news-drawer-header">Latest News</div>
   <div id="news-list"></div>
+</div>
+
+<div class="modal-overlay" id="upload-modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>Upload Financials &amp; Audit Report</span>
+      <button class="modal-close" id="modal-close-btn">&times;</button>
+    </div>
+
+    <div id="upload-rows"></div>
+
+    <button class="add-row-btn" id="add-row-btn">+ Add New</button>
+
+    <button class="save-bundle-btn" id="save-bundle-btn" style="margin-top:16px;">Save Documents</button>
+
+    <div class="saved-bundles">
+      <div class="saved-bundles-title">Uploaded Periods</div>
+      <div id="saved-bundles-list"></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1198,7 +1222,10 @@ function renderNews(items) {
 const DB_NAME = "equity_dash_docs";
 const STORE_NAME = "bundles";
 let dbInstance = null;
-let pendingFiles = [];
+let uploadRows = [];
+let rowIdCounter = 0;
+
+const FY_OPTIONS = ["FY 2026-27", "FY 2025-26", "FY 2024-25", "FY 2023-24", "FY 2022-23"];
 
 function openDocsDB() {
   return new Promise(function (resolve, reject) {
@@ -1218,7 +1245,18 @@ function openDocsDB() {
   });
 }
 
-function saveBundle(record) {
+function getBundle(id) {
+  return openDocsDB().then(function (db) {
+    return new Promise(function (resolve, reject) {
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const request = tx.objectStore(STORE_NAME).get(id);
+      request.onsuccess = function () { resolve(request.result || null); };
+      request.onerror = function () { reject(request.error); };
+    });
+  });
+}
+
+function putBundle(record) {
   return openDocsDB().then(function (db) {
     return new Promise(function (resolve, reject) {
       const tx = db.transaction(STORE_NAME, "readwrite");
@@ -1254,113 +1292,162 @@ function getBundlesForTicker(ticker) {
   });
 }
 
-/* ===== Upload panel UI logic ===== */
-const periodTypeEl = document.getElementById("period-type");
-const quarterFieldEl = document.getElementById("quarter-field");
-const periodFyEl = document.getElementById("period-fy");
-const dropZoneEl = document.getElementById("drop-zone");
-const fileInputEl = document.getElementById("file-input");
-const fileListEl = document.getElementById("file-list");
+/* ===== Modal open/close ===== */
+const uploadModalOverlay = document.getElementById("upload-modal-overlay");
+const uploadRowsEl = document.getElementById("upload-rows");
+const addRowBtn = document.getElementById("add-row-btn");
 const saveBundleBtn = document.getElementById("save-bundle-btn");
 const savedBundlesListEl = document.getElementById("saved-bundles-list");
 
-periodTypeEl.addEventListener("change", function () {
-  quarterFieldEl.style.display = periodTypeEl.value === "quarterly" ? "flex" : "none";
-});
-
-dropZoneEl.addEventListener("click", function () { fileInputEl.click(); });
-dropZoneEl.addEventListener("dragover", function (e) {
-  e.preventDefault();
-  dropZoneEl.classList.add("drag-over");
-});
-dropZoneEl.addEventListener("dragleave", function () {
-  dropZoneEl.classList.remove("drag-over");
-});
-dropZoneEl.addEventListener("drop", function (e) {
-  e.preventDefault();
-  dropZoneEl.classList.remove("drag-over");
-  addFiles(e.dataTransfer.files);
-});
-fileInputEl.addEventListener("change", function () {
-  addFiles(fileInputEl.files);
-  fileInputEl.value = "";
-});
-
-function addFiles(fileList) {
-  Array.prototype.forEach.call(fileList, function (file) {
-    if (file.type !== "application/pdf") return;
-    pendingFiles.push({ file: file, tag: "financials" });
+document.querySelectorAll("[data-open-upload-modal]").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    if (!currentRecord) { alert("Select a company first."); return; }
+    uploadModalOverlay.classList.add("open");
+    if (uploadRows.length === 0) addRow();
+    renderSavedBundles();
   });
-  renderFileList();
+});
+
+document.getElementById("modal-close-btn").addEventListener("click", function () {
+  uploadModalOverlay.classList.remove("open");
+});
+uploadModalOverlay.addEventListener("click", function (e) {
+  if (e.target === uploadModalOverlay) uploadModalOverlay.classList.remove("open");
+});
+
+function addRow() {
+  rowIdCounter += 1;
+  uploadRows.push({ rowId: rowIdCounter, periodType: "quarterly", quarter: "Q1", fy: FY_OPTIONS[0], tag: "financials", files: [] });
+  renderUploadRows();
 }
+addRowBtn.addEventListener("click", addRow);
 
-function renderFileList() {
-  fileListEl.innerHTML = "";
-  pendingFiles.forEach(function (entry, idx) {
-    const row = document.createElement("div");
-    row.className = "file-row";
+function renderUploadRows() {
+  uploadRowsEl.innerHTML = "";
+  uploadRows.forEach(function (row) {
+    const rowEl = document.createElement("div");
+    rowEl.className = "upload-row";
 
-    const nameEl = document.createElement("div");
-    nameEl.className = "file-name";
-    nameEl.textContent = entry.file.name;
+    const typeGroup = document.createElement("div");
+    typeGroup.className = "field-group";
+    typeGroup.innerHTML = '<label>Type</label>';
+    const typeSelect = document.createElement("select");
+    typeSelect.innerHTML = '<option value="quarterly">Quarterly</option><option value="annual">Yearly</option>';
+    typeSelect.value = row.periodType;
+    typeSelect.addEventListener("change", function () { row.periodType = typeSelect.value; renderUploadRows(); });
+    typeGroup.appendChild(typeSelect);
+    if (row.periodType === "quarterly") {
+      const qSelect = document.createElement("select");
+      qSelect.style.marginTop = "6px";
+      qSelect.innerHTML = '<option value="Q1">Q1</option><option value="Q2">Q2</option><option value="Q3">Q3</option><option value="Q4">Q4</option>';
+      qSelect.value = row.quarter;
+      qSelect.addEventListener("change", function () { row.quarter = qSelect.value; });
+      typeGroup.appendChild(qSelect);
+    }
 
-    const select = document.createElement("select");
-    select.innerHTML =
+    const yearGroup = document.createElement("div");
+    yearGroup.className = "field-group";
+    yearGroup.innerHTML = '<label>Year</label>';
+    const yearSelect = document.createElement("select");
+    yearSelect.innerHTML = FY_OPTIONS.map(function (fy) { return '<option value="' + fy + '">' + fy + '</option>'; }).join("");
+    yearSelect.value = row.fy;
+    yearSelect.addEventListener("change", function () { row.fy = yearSelect.value; });
+    yearGroup.appendChild(yearSelect);
+
+    const dzGroup = document.createElement("div");
+    dzGroup.className = "field-group";
+    dzGroup.innerHTML = '<label>Files</label>';
+    const dz = document.createElement("div");
+    dz.className = "row-drop-zone" + (row.files.length > 0 ? " has-files" : "");
+    dz.textContent = row.files.length > 0 ? row.files.length + " file(s) selected" : "Select or drop files";
+    const hiddenInput = document.createElement("input");
+    hiddenInput.type = "file";
+    hiddenInput.accept = "application/pdf";
+    hiddenInput.multiple = true;
+    hiddenInput.style.display = "none";
+    hiddenInput.addEventListener("change", function () {
+      Array.prototype.forEach.call(hiddenInput.files, function (f) {
+        if (f.type === "application/pdf") row.files.push(f);
+      });
+      renderUploadRows();
+    });
+    dz.addEventListener("click", function () { hiddenInput.click(); });
+    dz.addEventListener("dragover", function (e) { e.preventDefault(); dz.classList.add("drag-over"); });
+    dz.addEventListener("dragleave", function () { dz.classList.remove("drag-over"); });
+    dz.addEventListener("drop", function (e) {
+      e.preventDefault();
+      dz.classList.remove("drag-over");
+      Array.prototype.forEach.call(e.dataTransfer.files, function (f) {
+        if (f.type === "application/pdf") row.files.push(f);
+      });
+      renderUploadRows();
+    });
+    dzGroup.appendChild(dz);
+    dzGroup.appendChild(hiddenInput);
+
+    const tagGroup = document.createElement("div");
+    tagGroup.className = "field-group";
+    tagGroup.innerHTML = '<label>What does the file include?</label>';
+    const tagSelect = document.createElement("select");
+    tagSelect.innerHTML =
       '<option value="financials">Financial Statements</option>' +
       '<option value="audit">Audit Report</option>' +
       '<option value="both">Both</option>';
-    select.value = entry.tag;
-    select.addEventListener("change", function () {
-      pendingFiles[idx].tag = select.value;
-    });
+    tagSelect.value = row.tag;
+    tagSelect.addEventListener("change", function () { row.tag = tagSelect.value; });
+    tagGroup.appendChild(tagSelect);
 
     const removeBtn = document.createElement("button");
-    removeBtn.className = "remove-btn";
+    removeBtn.className = "remove-row-btn";
     removeBtn.textContent = "×";
     removeBtn.addEventListener("click", function () {
-      pendingFiles.splice(idx, 1);
-      renderFileList();
+      uploadRows = uploadRows.filter(function (r) { return r.rowId !== row.rowId; });
+      renderUploadRows();
     });
 
-    row.appendChild(nameEl);
-    row.appendChild(select);
-    row.appendChild(removeBtn);
-    fileListEl.appendChild(row);
+    rowEl.appendChild(typeGroup);
+    rowEl.appendChild(yearGroup);
+    rowEl.appendChild(dzGroup);
+    rowEl.appendChild(tagGroup);
+    rowEl.appendChild(removeBtn);
+    uploadRowsEl.appendChild(rowEl);
   });
-  saveBundleBtn.disabled = pendingFiles.length === 0;
 }
 
 saveBundleBtn.addEventListener("click", function () {
-  if (!currentRecord || pendingFiles.length === 0) return;
-
-  const periodType = periodTypeEl.value;
-  const fy = periodFyEl.value.trim();
-  if (!fy) {
-    alert("Enter a fiscal year (e.g. FY27) before saving.");
+  if (!currentRecord) return;
+  const validRows = uploadRows.filter(function (r) { return r.files.length > 0; });
+  if (validRows.length === 0) {
+    alert("Add at least one file before saving.");
     return;
   }
-  const quarter = periodType === "quarterly" ? document.getElementById("period-quarter").value : null;
-  const periodLabel = periodType === "quarterly" ? quarter + " " + fy : fy + " Annual";
-  const bundleId = currentRecord.ticker + "__" + periodType + "__" + (quarter || "") + "__" + fy;
 
-  const record = {
-    id: bundleId,
-    ticker: currentRecord.ticker,
-    periodType: periodType,
-    quarter: quarter,
-    fy: fy,
-    periodLabel: periodLabel,
-    savedAt: new Date().toISOString(),
-    files: pendingFiles.map(function (entry) {
-      return { name: entry.file.name, tag: entry.tag, blob: entry.file };
-    }),
-    analysis: null,
-  };
+  const savePromises = validRows.map(function (row) {
+    const periodLabel = row.periodType === "quarterly" ? row.quarter + " " + row.fy : row.fy + " Annual";
+    const bundleId = currentRecord.ticker + "__" + row.periodType + "__" + (row.periodType === "quarterly" ? row.quarter : "") + "__" + row.fy;
+    const newFiles = row.files.map(function (f) { return { name: f.name, tag: row.tag, blob: f }; });
 
-  saveBundle(record).then(function () {
-    pendingFiles = [];
-    renderFileList();
-    periodFyEl.value = "";
+    return getBundle(bundleId).then(function (existing) {
+      const record = existing || {
+        id: bundleId,
+        ticker: currentRecord.ticker,
+        periodType: row.periodType,
+        quarter: row.periodType === "quarterly" ? row.quarter : null,
+        fy: row.fy,
+        periodLabel: periodLabel,
+        files: [],
+        analysis: null,
+      };
+      record.files = record.files.concat(newFiles);
+      record.savedAt = new Date().toISOString();
+      return putBundle(record);
+    });
+  });
+
+  Promise.all(savePromises).then(function () {
+    uploadRows = [];
+    renderUploadRows();
+    addRow();
     renderSavedBundles();
   }).catch(function (err) {
     console.error(err);
