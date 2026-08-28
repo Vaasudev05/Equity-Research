@@ -492,6 +492,83 @@
     width: 100%;
   }
   .add-row-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
+
+  .ai-conn-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .ai-conn-row .conn-info { flex: 1; min-width: 0; }
+  .ai-conn-row .conn-nickname { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; }
+  .ai-conn-row .conn-meta { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--text-dim); }
+  .ai-conn-row label.default-check { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+  .ai-conn-row .remove-row-btn { flex-shrink: 0; }
+
+  .add-conn-form {
+    background: var(--panel-alt);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 12px;
+  }
+  .add-conn-form .field-group { margin-bottom: 10px; }
+  .add-conn-form select, .add-conn-form input[type="text"], .add-conn-form input[type="password"] {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    padding: 8px 10px;
+    border-radius: 5px;
+  }
+
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+  }
+  .checklist-item:hover { background: var(--panel-alt); }
+  .checklist-item span { font-size: 12.5px; }
+
+  .analysis-progress {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    padding: 10px 0;
+  }
+
+  .result-block {
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .result-block .result-header {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 12.5px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .result-block pre {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+    max-height: 320px;
+    overflow-y: auto;
+  }
     background: var(--accent);
     color: #17130A;
     border: none;
@@ -632,6 +709,7 @@
     font-family: 'IBM Plex Mono', monospace;
   }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.js"></script>
 </head>
 <body>
 
@@ -642,6 +720,7 @@
     <div id="search-dropdown"></div>
   </div>
   <div id="status" class="status-pill">Loading watchlist...</div>
+  <button class="upload-trigger" id="manage-ai-btn" style="margin-left:6px;">MANAGE AIs</button>
 </div>
 
 <main>
@@ -688,8 +767,11 @@
 
     <div class="placeholder-panel">
       <div class="ph-title-row">
-        <div class="ph-title">Financials (3yr, QoQ / YoY) <span class="ph-badge">STEP 3 — NOT YET WIRED</span></div>
-        <button class="upload-trigger" data-open-upload-modal>UPLOAD FILES</button>
+        <div class="ph-title">Financials <span class="ph-badge">STEP 6 — AI ANALYSIS</span></div>
+        <div style="display:flex; gap:8px;">
+          <button class="upload-trigger" data-open-upload-modal>UPLOAD FILES</button>
+          <button class="upload-trigger" data-open-analyze-modal>ANALYZE</button>
+        </div>
       </div>
       <p>Balance Sheet, P&amp;L, and Cash Flow with YoY/QoQ color-coded comparison will render here once the
       financial-statement scraping layer is built.</p>
@@ -698,8 +780,11 @@
     <div class="two-col">
       <div class="placeholder-panel">
         <div class="ph-title-row">
-          <div class="ph-title">Auditor's Report <span class="ph-badge">STEP 6 — NOT YET WIRED</span></div>
-          <button class="upload-trigger" data-open-upload-modal>UPLOAD FILES</button>
+          <div class="ph-title">Auditor's Report <span class="ph-badge">STEP 6 — AI ANALYSIS</span></div>
+          <div style="display:flex; gap:8px;">
+            <button class="upload-trigger" data-open-upload-modal>UPLOAD FILES</button>
+            <button class="upload-trigger" data-open-analyze-modal>ANALYZE</button>
+          </div>
         </div>
         <p>Opinion type (Unmodified / Qualified / Adverse / Disclaimer) plus Key Audit Matters, Emphasis of Matter,
         and Other Matter summaries — auto-extracted when you upload an annual report PDF.</p>
@@ -746,6 +831,71 @@
       <div class="saved-bundles-title">Uploaded Periods</div>
       <div id="saved-bundles-list"></div>
     </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="ai-modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>Manage AI Connections</span>
+      <button class="modal-close" id="ai-modal-close-btn">&times;</button>
+    </div>
+    <p style="font-size:12px; color:var(--text-dim); margin-bottom:14px; line-height:1.5;">
+      Add any AI service with an API key. Your keys are stored only in this browser and sent
+      directly to that provider — never to us or anywhere else. Check "Default" on one or more
+      connections to have them pre-selected whenever you run Analyze.
+    </p>
+    <div id="ai-conn-list"></div>
+    <div class="add-conn-form">
+      <div class="field-group">
+        <label>Nickname</label>
+        <input type="text" id="conn-nickname" placeholder="e.g. My Claude" />
+      </div>
+      <div class="field-group">
+        <label>Format</label>
+        <select id="conn-format">
+          <option value="anthropic">Anthropic (Claude)</option>
+          <option value="openai-compatible">OpenAI-compatible (OpenAI, Gemini, OpenRouter, Groq, etc.)</option>
+        </select>
+      </div>
+      <div class="field-group" id="conn-baseurl-group">
+        <label>API Base URL</label>
+        <input type="text" id="conn-baseurl" placeholder="https://api.openai.com/v1/chat/completions" />
+      </div>
+      <div class="field-group">
+        <label>Model name</label>
+        <input type="text" id="conn-model" placeholder="e.g. claude-sonnet-4-5 or gpt-4o" />
+      </div>
+      <div class="field-group">
+        <label>API Key</label>
+        <input type="password" id="conn-apikey" placeholder="Paste your API key" />
+      </div>
+      <button class="save-bundle-btn" id="add-conn-btn">Add Connection</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="analyze-modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>Run Analysis</span>
+      <button class="modal-close" id="analyze-modal-close-btn">&times;</button>
+    </div>
+
+    <div class="field-group" style="margin-bottom:14px;">
+      <label>AI Connections to use</label>
+      <div id="analyze-ai-list"></div>
+    </div>
+
+    <div class="field-group" style="margin-bottom:14px;">
+      <label>Periods to analyze</label>
+      <div id="analyze-period-list"></div>
+    </div>
+
+    <button class="save-bundle-btn" id="run-analysis-btn">Run Analysis</button>
+
+    <div id="analysis-progress"></div>
+    <div id="analysis-results"></div>
   </div>
 </div>
 
@@ -1490,6 +1640,363 @@ function renderSavedBundles() {
       savedBundlesListEl.appendChild(card);
     });
   });
+}
+
+/* ===== AI connection management (localStorage, per-browser only) ===== */
+const AI_CONN_KEY = "equity_dash_ai_connections";
+
+function getAIConnections() {
+  try {
+    return JSON.parse(localStorage.getItem(AI_CONN_KEY)) || [];
+  } catch (err) {
+    return [];
+  }
+}
+function saveAIConnections(list) {
+  localStorage.setItem(AI_CONN_KEY, JSON.stringify(list));
+}
+
+const aiModalOverlay = document.getElementById("ai-modal-overlay");
+const aiConnListEl = document.getElementById("ai-conn-list");
+const connFormatEl = document.getElementById("conn-format");
+const connBaseUrlGroup = document.getElementById("conn-baseurl-group");
+const connBaseUrlEl = document.getElementById("conn-baseurl");
+
+document.getElementById("manage-ai-btn").addEventListener("click", function () {
+  aiModalOverlay.classList.add("open");
+  renderAIConnections();
+});
+document.getElementById("ai-modal-close-btn").addEventListener("click", function () {
+  aiModalOverlay.classList.remove("open");
+});
+aiModalOverlay.addEventListener("click", function (e) {
+  if (e.target === aiModalOverlay) aiModalOverlay.classList.remove("open");
+});
+
+connFormatEl.addEventListener("change", function () {
+  connBaseUrlGroup.style.display = connFormatEl.value === "openai-compatible" ? "flex" : "none";
+});
+connBaseUrlGroup.style.display = "none";
+
+function renderAIConnections() {
+  const list = getAIConnections();
+  aiConnListEl.innerHTML = "";
+  if (list.length === 0) {
+    aiConnListEl.innerHTML = '<div style="color:var(--text-dim); font-size:12px;">No AI connections added yet.</div>';
+    return;
+  }
+  list.forEach(function (conn) {
+    const row = document.createElement("div");
+    row.className = "ai-conn-row";
+
+    const info = document.createElement("div");
+    info.className = "conn-info";
+    info.innerHTML =
+      '<div class="conn-nickname">' + conn.nickname + '</div>' +
+      '<div class="conn-meta">' + conn.format + (conn.model ? " · " + conn.model : "") + '</div>';
+
+    const label = document.createElement("label");
+    label.className = "default-check";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = !!conn.isDefault;
+    cb.addEventListener("change", function () {
+      conn.isDefault = cb.checked;
+      saveAIConnections(list);
+    });
+    label.appendChild(cb);
+    label.appendChild(document.createTextNode("Default"));
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "remove-row-btn";
+    removeBtn.textContent = "×";
+    removeBtn.addEventListener("click", function () {
+      const filtered = list.filter(function (c) { return c.id !== conn.id; });
+      saveAIConnections(filtered);
+      renderAIConnections();
+    });
+
+    row.appendChild(info);
+    row.appendChild(label);
+    row.appendChild(removeBtn);
+    aiConnListEl.appendChild(row);
+  });
+}
+
+document.getElementById("add-conn-btn").addEventListener("click", function () {
+  const nickname = document.getElementById("conn-nickname").value.trim();
+  const format = connFormatEl.value;
+  const baseUrl = connBaseUrlEl.value.trim() || "https://api.openai.com/v1/chat/completions";
+  const model = document.getElementById("conn-model").value.trim();
+  const apiKey = document.getElementById("conn-apikey").value.trim();
+
+  if (!nickname || !model || !apiKey) {
+    alert("Nickname, model name, and API key are all required.");
+    return;
+  }
+
+  const list = getAIConnections();
+  list.push({
+    id: "conn_" + Date.now(),
+    nickname: nickname,
+    format: format,
+    baseUrl: format === "openai-compatible" ? baseUrl : null,
+    model: model,
+    apiKey: apiKey,
+    isDefault: list.length === 0,
+  });
+  saveAIConnections(list);
+
+  document.getElementById("conn-nickname").value = "";
+  document.getElementById("conn-model").value = "";
+  document.getElementById("conn-apikey").value = "";
+  renderAIConnections();
+});
+
+/* ===== Analyze modal ===== */
+const analyzeModalOverlay = document.getElementById("analyze-modal-overlay");
+const analyzeAiListEl = document.getElementById("analyze-ai-list");
+const analyzePeriodListEl = document.getElementById("analyze-period-list");
+const analysisProgressEl = document.getElementById("analysis-progress");
+const analysisResultsEl = document.getElementById("analysis-results");
+
+document.querySelectorAll("[data-open-analyze-modal]").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    if (!currentRecord) { alert("Select a company first."); return; }
+    const connections = getAIConnections();
+    if (connections.length === 0) {
+      alert("Add at least one AI connection first (Manage AIs button, top right).");
+      return;
+    }
+    analyzeModalOverlay.classList.add("open");
+    renderAnalyzeModal();
+  });
+});
+document.getElementById("analyze-modal-close-btn").addEventListener("click", function () {
+  analyzeModalOverlay.classList.remove("open");
+});
+analyzeModalOverlay.addEventListener("click", function (e) {
+  if (e.target === analyzeModalOverlay) analyzeModalOverlay.classList.remove("open");
+});
+
+function renderAnalyzeModal() {
+  analysisResultsEl.innerHTML = "";
+  analysisProgressEl.textContent = "";
+
+  const connections = getAIConnections();
+  analyzeAiListEl.innerHTML = "";
+  connections.forEach(function (conn) {
+    const item = document.createElement("label");
+    item.className = "checklist-item";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.value = conn.id;
+    cb.checked = !!conn.isDefault;
+    item.appendChild(cb);
+    const span = document.createElement("span");
+    span.textContent = conn.nickname + " (" + conn.format + ")";
+    item.appendChild(span);
+    analyzeAiListEl.appendChild(item);
+  });
+
+  getBundlesForTicker(currentRecord.ticker).then(function (bundles) {
+    analyzePeriodListEl.innerHTML = "";
+    if (bundles.length === 0) {
+      analyzePeriodListEl.innerHTML = '<div style="color:var(--text-dim); font-size:12px;">No documents uploaded yet for this company.</div>';
+      return;
+    }
+    bundles.forEach(function (bundle) {
+      const item = document.createElement("label");
+      item.className = "checklist-item";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.value = bundle.id;
+      cb.checked = true;
+      item.appendChild(cb);
+      const span = document.createElement("span");
+      span.textContent = bundle.periodLabel;
+      item.appendChild(span);
+      analyzePeriodListEl.appendChild(item);
+    });
+  });
+}
+
+/* ===== PDF text extraction (pdf.js) ===== */
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.js";
+
+function extractPdfText(file) {
+  return file.arrayBuffer().then(function (buffer) {
+    return pdfjsLib.getDocument({ data: buffer }).promise.then(function (pdf) {
+      const pagePromises = [];
+      for (let i = 1; i <= pdf.numPages; i++) {
+        pagePromises.push(
+          pdf.getPage(i).then(function (page) {
+            return page.getTextContent().then(function (content) {
+              return content.items.map(function (it) { return it.str; }).join(" ");
+            });
+          })
+        );
+      }
+      return Promise.all(pagePromises).then(function (pages) { return pages.join("\n\n"); });
+    });
+  });
+}
+
+/* ===== Prompt builders ===== */
+function buildFinancialsPrompt(periodLabel, text) {
+  return "You are analyzing a financial statement document for the period " + periodLabel + ".\n\n" +
+    "Extract the Balance Sheet, Profit and Loss, and Cash Flow figures you can find in the text below. " +
+    "Respond ONLY with valid JSON, no other text, in this shape:\n" +
+    '{"balance_sheet": {}, "profit_and_loss": {}, "cash_flow": {}, "notes": ""}\n' +
+    "Use the actual line item names found in the document as JSON keys. " +
+    "If a statement is not present in the text, leave that object empty and explain in notes. " +
+    "Do not invent figures that are not in the text.\n\n" +
+    "DOCUMENT TEXT:\n" + text.slice(0, 60000);
+}
+
+function buildAuditPrompt(periodLabel, text) {
+  return "You are analyzing an auditor's report for the period " + periodLabel + ".\n\n" +
+    "Respond ONLY with valid JSON, no other text, in this shape:\n" +
+    '{"opinion_type": "", "reasons_if_not_unmodified": "", "key_audit_matters": [], "emphasis_of_matter": [], "other_matter": []}\n' +
+    "opinion_type must be one of: Unmodified, Qualified, Adverse, Disclaimer, Not Found. " +
+    "If the auditor's opinion is not present in this text, set opinion_type to \"Not Found\" rather than guessing.\n\n" +
+    "DOCUMENT TEXT:\n" + text.slice(0, 60000);
+}
+
+/* ===== Calling AI providers ===== */
+function callAI(conn, promptText) {
+  if (conn.format === "anthropic") {
+    return fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": conn.apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
+      },
+      body: JSON.stringify({
+        model: conn.model,
+        max_tokens: 2048,
+        messages: [{ role: "user", content: promptText }],
+      }),
+    }).then(function (res) { return res.json(); }).then(function (data) {
+      if (data.error) throw new Error(data.error.message || "Anthropic API error");
+      return data.content && data.content[0] ? data.content[0].text : "";
+    });
+  }
+
+  return fetch(conn.baseUrl, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "Authorization": "Bearer " + conn.apiKey,
+    },
+    body: JSON.stringify({
+      model: conn.model,
+      messages: [{ role: "user", content: promptText }],
+    }),
+  }).then(function (res) { return res.json(); }).then(function (data) {
+    if (data.error) throw new Error(data.error.message || "API error");
+    return data.choices && data.choices[0] ? data.choices[0].message.content : "";
+  });
+}
+
+function tryParseJSON(text) {
+  try {
+    const cleaned = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    return JSON.parse(cleaned);
+  } catch (err) {
+    return null;
+  }
+}
+
+/* ===== Run analysis orchestration ===== */
+document.getElementById("run-analysis-btn").addEventListener("click", function () {
+  const selectedConnIds = Array.prototype.map.call(
+    analyzeAiListEl.querySelectorAll("input:checked"), function (cb) { return cb.value; }
+  );
+  const selectedBundleIds = Array.prototype.map.call(
+    analyzePeriodListEl.querySelectorAll("input:checked"), function (cb) { return cb.value; }
+  );
+
+  if (selectedConnIds.length === 0 || selectedBundleIds.length === 0) {
+    alert("Select at least one AI connection and one period.");
+    return;
+  }
+
+  const allConnections = getAIConnections();
+  const connections = allConnections.filter(function (c) { return selectedConnIds.indexOf(c.id) !== -1; });
+
+  analysisResultsEl.innerHTML = "";
+  analysisProgressEl.textContent = "Reading documents...";
+
+  const bundlePromises = selectedBundleIds.map(function (id) { return getBundle(id); });
+
+  Promise.all(bundlePromises).then(function (bundles) {
+    let tasks = [];
+    bundles.forEach(function (bundle) {
+      const financialsFiles = bundle.files.filter(function (f) { return f.tag === "financials" || f.tag === "both"; });
+      const auditFiles = bundle.files.filter(function (f) { return f.tag === "audit" || f.tag === "both"; });
+
+      if (financialsFiles.length > 0) {
+        tasks.push({ bundle: bundle, kind: "financials", files: financialsFiles });
+      }
+      if (auditFiles.length > 0) {
+        tasks.push({ bundle: bundle, kind: "audit", files: auditFiles });
+      }
+    });
+
+    let completed = 0;
+    const total = tasks.length * connections.length;
+
+    function runNext(taskIdx, connIdx) {
+      if (taskIdx >= tasks.length) {
+        analysisProgressEl.textContent = "Done — " + completed + " of " + total + " analyses completed.";
+        return;
+      }
+      if (connIdx >= connections.length) {
+        runNext(taskIdx + 1, 0);
+        return;
+      }
+
+      const task = tasks[taskIdx];
+      const conn = connections[connIdx];
+      analysisProgressEl.textContent = "Analyzing " + task.bundle.periodLabel + " (" + task.kind + ") with " + conn.nickname + "...";
+
+      const textPromises = task.files.map(function (f) { return extractPdfText(f.blob); });
+
+      Promise.all(textPromises).then(function (texts) {
+        const combinedText = texts.join("\n\n---\n\n");
+        const prompt = task.kind === "financials"
+          ? buildFinancialsPrompt(task.bundle.periodLabel, combinedText)
+          : buildAuditPrompt(task.bundle.periodLabel, combinedText);
+
+        return callAI(conn, prompt).then(function (responseText) {
+          const parsed = tryParseJSON(responseText);
+          renderResultBlock(task.bundle.periodLabel, task.kind, conn.nickname, parsed || responseText);
+          completed += 1;
+          analysisProgressEl.textContent = "Analyzed " + completed + " of " + total + "...";
+        });
+      }).catch(function (err) {
+        renderResultBlock(task.bundle.periodLabel, task.kind, conn.nickname, "Error: " + err.message);
+        completed += 1;
+      }).then(function () {
+        runNext(taskIdx, connIdx + 1);
+      });
+    }
+
+    runNext(0, 0);
+  });
+});
+
+function renderResultBlock(periodLabel, kind, connNickname, content) {
+  const block = document.createElement("div");
+  block.className = "result-block";
+  const kindLabel = kind === "financials" ? "Financial Statements" : "Auditor's Report";
+  block.innerHTML =
+    '<div class="result-header">' + periodLabel + " — " + kindLabel + " — " + connNickname + '</div>' +
+    "<pre>" + (typeof content === "string" ? content : JSON.stringify(content, null, 2)) + "</pre>";
+  analysisResultsEl.appendChild(block);
 }
 
 loadWatchlist();
