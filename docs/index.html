@@ -569,6 +569,92 @@
     max-height: 320px;
     overflow-y: auto;
   }
+
+  .compare-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .compare-toggle-btn.active { background: var(--accent); border-color: var(--accent); color: #17130A; }
+
+  .ai-select-dropdown {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 6px 8px;
+    border-radius: 5px;
+  }
+
+  .fin-table-wrap { overflow-x: auto; margin-bottom: 18px; }
+  .fin-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .fin-table th, .fin-table td {
+    padding: 7px 10px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .fin-table th:first-child, .fin-table td:first-child {
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dim);
+    white-space: normal;
+    max-width: 220px;
+  }
+  .fin-table th {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .fin-table td { font-family: 'IBM Plex Mono', monospace; color: var(--text); }
+  .fin-table td.cell-up { color: var(--gain); }
+  .fin-table td.cell-down { color: var(--loss); }
+  .fin-section-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 12.5px;
+    color: var(--accent);
+    margin: 16px 0 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .audit-period-card {
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .audit-period-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .opinion-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .opinion-badge.unmodified { background: rgba(47,191,113,0.15); color: var(--gain); }
+  .opinion-badge.qualified { background: rgba(212,167,44,0.15); color: var(--accent); }
+  .opinion-badge.adverse, .opinion-badge.disclaimer { background: rgba(229,72,77,0.15); color: var(--loss); }
+  .opinion-badge.notfound { background: var(--border); color: var(--text-dim); }
+  .audit-sub-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; margin: 10px 0 4px; }
+  .audit-list { font-size: 12.5px; color: var(--text); line-height: 1.6; padding-left: 18px; margin: 0; }
     background: var(--accent);
     color: #17130A;
     border: none;
@@ -767,27 +853,33 @@
 
     <div class="placeholder-panel">
       <div class="ph-title-row">
-        <div class="ph-title">Financials <span class="ph-badge">STEP 6 — AI ANALYSIS</span></div>
-        <div style="display:flex; gap:8px;">
+        <div class="ph-title">Financials</div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <button class="compare-toggle-btn" id="yoy-toggle-btn">YoY</button>
+          <button class="compare-toggle-btn" id="qoq-toggle-btn">QoQ</button>
+          <select id="fin-ai-select" class="ai-select-dropdown" style="display:none;"></select>
           <button class="upload-trigger" data-open-upload-modal>UPLOAD FILES</button>
           <button class="upload-trigger" data-open-analyze-modal>ANALYZE</button>
         </div>
       </div>
-      <p>Balance Sheet, P&amp;L, and Cash Flow with YoY/QoQ color-coded comparison will render here once the
-      financial-statement scraping layer is built.</p>
+      <div id="financials-content">
+        <p style="color:var(--text-dim); font-size:13px;">Upload and analyze a document to see financials here.</p>
+      </div>
     </div>
 
     <div class="two-col">
       <div class="placeholder-panel">
         <div class="ph-title-row">
-          <div class="ph-title">Auditor's Report <span class="ph-badge">STEP 6 — AI ANALYSIS</span></div>
-          <div style="display:flex; gap:8px;">
+          <div class="ph-title">Auditor's Report</div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <select id="audit-ai-select" class="ai-select-dropdown" style="display:none;"></select>
             <button class="upload-trigger" data-open-upload-modal>UPLOAD FILES</button>
             <button class="upload-trigger" data-open-analyze-modal>ANALYZE</button>
           </div>
         </div>
-        <p>Opinion type (Unmodified / Qualified / Adverse / Disclaimer) plus Key Audit Matters, Emphasis of Matter,
-        and Other Matter summaries — auto-extracted when you upload an annual report PDF.</p>
+        <div id="audit-content">
+          <p style="color:var(--text-dim); font-size:13px;">Upload and analyze a document to see the auditor's report here.</p>
+        </div>
       </div>
 
       <div class="placeholder-panel">
@@ -1012,6 +1104,10 @@ async function selectTicker(ticker, fallbackName) {
     renderDashboard();
     await loadPriceRange(currentRange);
     renderSavedBundles();
+    delete finAiSelectEl.dataset.populated;
+    delete auditAiSelectEl.dataset.populated;
+    renderFinancialsSection();
+    renderAuditSection();
     if (newsDrawerOpen) {
       loadNews(currentRecord.name);
     }
@@ -1974,6 +2070,17 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
         return callAI(conn, prompt).then(function (responseText) {
           const parsed = tryParseJSON(responseText);
           renderResultBlock(task.bundle.periodLabel, task.kind, conn.nickname, parsed || responseText);
+
+          if (!task.bundle.analysis) task.bundle.analysis = {};
+          if (!task.bundle.analysis[task.kind]) task.bundle.analysis[task.kind] = {};
+          task.bundle.analysis[task.kind][conn.id] = {
+            connNickname: conn.nickname,
+            data: parsed,
+            rawText: parsed ? null : responseText,
+            analyzedAt: new Date().toISOString(),
+          };
+          return putBundle(task.bundle);
+        }).then(function () {
           completed += 1;
           analysisProgressEl.textContent = "Analyzed " + completed + " of " + total + "...";
         });
@@ -1986,17 +2093,257 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
     }
 
     runNext(0, 0);
+
+    const checkDone = setInterval(function () {
+      if (completed >= total) {
+        clearInterval(checkDone);
+        renderFinancialsSection();
+        renderAuditSection();
+      }
+    }, 400);
   });
 });
 
 function renderResultBlock(periodLabel, kind, connNickname, content) {
   const block = document.createElement("div");
   block.className = "result-block";
-  const kindLabel = kind === "financials" ? "Financial Statements" : "Auditor's Report";
+  const kindLabel = kind === "financials" ? "Financial Statements" : "Auditor Report";
   block.innerHTML =
     '<div class="result-header">' + periodLabel + " — " + kindLabel + " — " + connNickname + '</div>' +
     "<pre>" + (typeof content === "string" ? content : JSON.stringify(content, null, 2)) + "</pre>";
   analysisResultsEl.appendChild(block);
+}
+
+/* ===== Period ordering + YoY/QoQ comparison logic ===== */
+function fyIndexOf(fy) { return FY_OPTIONS.indexOf(fy); }
+function quarterRank(bundle) {
+  if (bundle.periodType === "annual") return 5;
+  const map = { Q1: 1, Q2: 2, Q3: 3, Q4: 4 };
+  return map[bundle.quarter] || 0;
+}
+function periodCompare(a, b) {
+  const fa = fyIndexOf(a.fy), fb = fyIndexOf(b.fy);
+  if (fa !== fb) return fa - fb;
+  return quarterRank(b) - quarterRank(a);
+}
+function findYoYPeriod(bundles, bundle) {
+  const targetIdx = fyIndexOf(bundle.fy) + 1;
+  if (targetIdx >= FY_OPTIONS.length) return null;
+  const targetFy = FY_OPTIONS[targetIdx];
+  return bundles.find(function (b) {
+    return b.fy === targetFy && b.periodType === bundle.periodType && b.quarter === bundle.quarter;
+  }) || null;
+}
+function findQoQPeriod(bundles, bundle) {
+  if (bundle.periodType !== "quarterly") return null;
+  if (bundle.quarter === "Q1") {
+    const targetIdx = fyIndexOf(bundle.fy) + 1;
+    if (targetIdx >= FY_OPTIONS.length) return null;
+    const targetFy = FY_OPTIONS[targetIdx];
+    return bundles.find(function (b) { return b.fy === targetFy && b.periodType === "quarterly" && b.quarter === "Q4"; }) || null;
+  }
+  const prevMap = { Q2: "Q1", Q3: "Q2", Q4: "Q3" };
+  const targetQ = prevMap[bundle.quarter];
+  return bundles.find(function (b) { return b.fy === bundle.fy && b.periodType === "quarterly" && b.quarter === targetQ; }) || null;
+}
+
+function parseNumericValue(v) {
+  if (typeof v === "number") return v;
+  if (typeof v !== "string") return NaN;
+  const isNegParen = /^\(.*\)$/.test(v.trim());
+  const cleaned = v.replace(/[^0-9.\-]/g, "");
+  const num = parseFloat(cleaned);
+  if (isNaN(num)) return NaN;
+  return isNegParen ? -Math.abs(num) : num;
+}
+
+function isLowerBetter(key) {
+  const k = key.toLowerCase();
+  const keywords = ["expense", "cost", "loss", "expenditure", "liabilit", "payable", "depreciation", "borrowing", "debt"];
+  return keywords.some(function (kw) { return k.indexOf(kw) !== -1; });
+}
+
+/* ===== Financials table rendering ===== */
+let yoyActive = false;
+let qoqActive = false;
+const finAiSelectEl = document.getElementById("fin-ai-select");
+
+document.getElementById("yoy-toggle-btn").addEventListener("click", function () {
+  yoyActive = !yoyActive;
+  if (yoyActive) qoqActive = false;
+  document.getElementById("yoy-toggle-btn").classList.toggle("active", yoyActive);
+  document.getElementById("qoq-toggle-btn").classList.remove("active");
+  renderFinancialsSection();
+});
+document.getElementById("qoq-toggle-btn").addEventListener("click", function () {
+  qoqActive = !qoqActive;
+  if (qoqActive) yoyActive = false;
+  document.getElementById("qoq-toggle-btn").classList.toggle("active", qoqActive);
+  document.getElementById("yoy-toggle-btn").classList.remove("active");
+  renderFinancialsSection();
+});
+finAiSelectEl.addEventListener("change", renderFinancialsSection);
+
+function renderFinancialsSection() {
+  const container = document.getElementById("financials-content");
+  if (!currentRecord) { container.innerHTML = "<p style=\"color:var(--text-dim);font-size:13px;\">Select a company first.</p>"; return; }
+
+  getBundlesForTicker(currentRecord.ticker).then(function (bundles) {
+    const withFin = bundles.filter(function (b) { return b.analysis && b.analysis.financials && Object.keys(b.analysis.financials).length > 0; });
+
+    if (withFin.length === 0) {
+      container.innerHTML = "<p style=\"color:var(--text-dim);font-size:13px;\">Upload and analyze a document to see financials here.</p>";
+      finAiSelectEl.style.display = "none";
+      return;
+    }
+
+    const connIdsSet = {};
+    withFin.forEach(function (b) {
+      Object.keys(b.analysis.financials).forEach(function (cid) { connIdsSet[cid] = b.analysis.financials[cid].connNickname; });
+    });
+    const connIds = Object.keys(connIdsSet);
+
+    if (connIds.length > 1) {
+      finAiSelectEl.style.display = "inline-block";
+      if (!finAiSelectEl.dataset.populated) {
+        finAiSelectEl.innerHTML = connIds.map(function (cid) { return '<option value="' + cid + '">' + connIdsSet[cid] + '</option>'; }).join("");
+        finAiSelectEl.dataset.populated = "1";
+      }
+    } else {
+      finAiSelectEl.style.display = "none";
+    }
+    const selectedConnId = connIds.length > 1 ? (finAiSelectEl.value || connIds[0]) : connIds[0];
+
+    withFin.sort(periodCompare);
+    const periodsData = withFin.map(function (b) {
+      const entry = b.analysis.financials[selectedConnId];
+      return { bundle: b, data: entry ? entry.data : null };
+    }).filter(function (p) { return p.data; });
+
+    if (periodsData.length === 0) {
+      container.innerHTML = "<p style=\"color:var(--text-dim);font-size:13px;\">No financials found for the selected AI (it may have returned unparseable output — check the Analyze modal results).</p>";
+      return;
+    }
+
+    const sections = [["balance_sheet", "Balance Sheet"], ["profit_and_loss", "Profit &amp; Loss"], ["cash_flow", "Cash Flow"]];
+    let html = "";
+
+    sections.forEach(function (sec) {
+      const key = sec[0], label = sec[1];
+      const allKeys = {};
+      periodsData.forEach(function (p) {
+        const obj = p.data[key] || {};
+        Object.keys(obj).forEach(function (k) { allKeys[k] = true; });
+      });
+      const rowKeys = Object.keys(allKeys);
+      if (rowKeys.length === 0) return;
+
+      html += '<div class="fin-section-label">' + label + '</div>';
+      html += '<div class="fin-table-wrap"><table class="fin-table"><thead><tr><th>Line Item</th>';
+      periodsData.forEach(function (p) { html += "<th>" + p.bundle.periodLabel + "</th>"; });
+      html += "</tr></thead><tbody>";
+
+      rowKeys.forEach(function (rowKey) {
+        html += "<tr><td>" + rowKey + "</td>";
+        periodsData.forEach(function (p) {
+          const val = p.data[key] ? p.data[key][rowKey] : undefined;
+          const displayVal = (val === undefined || val === null || val === "") ? "—" : val;
+          let cellClass = "";
+
+          if (yoyActive || qoqActive) {
+            const compBundle = yoyActive ? findYoYPeriod(withFin, p.bundle) : findQoQPeriod(withFin, p.bundle);
+            if (compBundle) {
+              const compEntry = compBundle.analysis.financials[selectedConnId];
+              const compVal = compEntry && compEntry.data && compEntry.data[key] ? compEntry.data[key][rowKey] : undefined;
+              const curNum = parseNumericValue(val);
+              const compNum = parseNumericValue(compVal);
+              if (!isNaN(curNum) && !isNaN(compNum) && compNum !== 0 && curNum !== compNum) {
+                const increased = curNum > compNum;
+                const lowerBetter = isLowerBetter(rowKey);
+                const good = lowerBetter ? !increased : increased;
+                cellClass = good ? "cell-up" : "cell-down";
+              }
+            }
+          }
+          html += '<td class="' + cellClass + '">' + displayVal + "</td>";
+        });
+        html += "</tr>";
+      });
+      html += "</tbody></table></div>";
+    });
+
+    container.innerHTML = html || "<p style=\"color:var(--text-dim);font-size:13px;\">The AI response did not contain recognizable financial statement data.</p>";
+  });
+}
+
+/* ===== Auditor Report rendering ===== */
+const auditAiSelectEl = document.getElementById("audit-ai-select");
+auditAiSelectEl.addEventListener("change", renderAuditSection);
+
+function renderAuditSection() {
+  const container = document.getElementById("audit-content");
+  if (!currentRecord) { container.innerHTML = "<p style=\"color:var(--text-dim);font-size:13px;\">Select a company first.</p>"; return; }
+
+  getBundlesForTicker(currentRecord.ticker).then(function (bundles) {
+    const withAudit = bundles.filter(function (b) { return b.analysis && b.analysis.audit && Object.keys(b.analysis.audit).length > 0; });
+
+    if (withAudit.length === 0) {
+      container.innerHTML = "<p style=\"color:var(--text-dim);font-size:13px;\">Upload and analyze a document to see the Auditor Report here.</p>";
+      auditAiSelectEl.style.display = "none";
+      return;
+    }
+
+    const connIdsSet = {};
+    withAudit.forEach(function (b) {
+      Object.keys(b.analysis.audit).forEach(function (cid) { connIdsSet[cid] = b.analysis.audit[cid].connNickname; });
+    });
+    const connIds = Object.keys(connIdsSet);
+
+    if (connIds.length > 1) {
+      auditAiSelectEl.style.display = "inline-block";
+      if (!auditAiSelectEl.dataset.populated) {
+        auditAiSelectEl.innerHTML = connIds.map(function (cid) { return '<option value="' + cid + '">' + connIdsSet[cid] + '</option>'; }).join("");
+        auditAiSelectEl.dataset.populated = "1";
+      }
+    } else {
+      auditAiSelectEl.style.display = "none";
+    }
+    const selectedConnId = connIds.length > 1 ? (auditAiSelectEl.value || connIds[0]) : connIds[0];
+
+    withAudit.sort(periodCompare);
+    let html = "";
+
+    withAudit.forEach(function (b) {
+      const entry = b.analysis.audit[selectedConnId];
+      if (!entry || !entry.data) return;
+      const d = entry.data;
+      let opClass = (d.opinion_type || "").toLowerCase().replace(/[^a-z]/g, "");
+      if (["unmodified", "qualified", "adverse", "disclaimer"].indexOf(opClass) === -1) opClass = "notfound";
+
+      html += '<div class="audit-period-card">';
+      html += '<div class="audit-period-header"><span class="bundle-period-label">' + b.periodLabel + '</span>' +
+        '<span class="opinion-badge ' + opClass + '">' + (d.opinion_type || "Not Found") + '</span></div>';
+
+      if (d.reasons_if_not_unmodified) {
+        html += '<div class="audit-sub-label">Reasons</div><div style="font-size:12.5px;">' + d.reasons_if_not_unmodified + '</div>';
+      }
+      if (d.key_audit_matters && d.key_audit_matters.length) {
+        html += '<div class="audit-sub-label">Key Audit Matters</div><ul class="audit-list">' +
+          d.key_audit_matters.map(function (x) { return "<li>" + x + "</li>"; }).join("") + '</ul>';
+      }
+      if (d.emphasis_of_matter && d.emphasis_of_matter.length) {
+        html += '<div class="audit-sub-label">Emphasis of Matter</div><ul class="audit-list">' +
+          d.emphasis_of_matter.map(function (x) { return "<li>" + x + "</li>"; }).join("") + '</ul>';
+      }
+      if (d.other_matter && d.other_matter.length) {
+        html += '<div class="audit-sub-label">Other Matter</div><ul class="audit-list">' +
+          d.other_matter.map(function (x) { return "<li>" + x + "</li>"; }).join("") + '</ul>';
+      }
+      html += "</div>";
+    });
+
+    container.innerHTML = html || "<p style=\"color:var(--text-dim);font-size:13px;\">No Auditor Report data found for the selected AI.</p>";
+  });
 }
 
 loadWatchlist();
