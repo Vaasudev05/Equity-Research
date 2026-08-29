@@ -593,6 +593,25 @@
     border-radius: 5px;
   }
 
+  .ai-pills-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .ai-pill {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .ai-pill.active { background: var(--accent); border-color: var(--accent); color: #17130A; font-weight: 600; }
+  .ai-pill:hover:not(.active) { border-color: var(--accent-dim); color: var(--text); }
+
   .fin-table-wrap { overflow-x: auto; margin-bottom: 18px; }
   .fin-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   .fin-table th, .fin-table td {
@@ -857,11 +876,11 @@
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
           <button class="compare-toggle-btn" id="yoy-toggle-btn">YoY</button>
           <button class="compare-toggle-btn" id="qoq-toggle-btn">QoQ</button>
-          <select id="fin-ai-select" class="ai-select-dropdown" style="display:none;"></select>
           <button class="upload-trigger" data-open-upload-modal>UPLOAD FILES</button>
           <button class="upload-trigger" data-open-analyze-modal>ANALYZE</button>
         </div>
       </div>
+      <div class="ai-pills-row" id="fin-ai-pills"></div>
       <div id="financials-content">
         <p style="color:var(--text-dim); font-size:13px;">Upload and analyze a document to see financials here.</p>
       </div>
@@ -872,11 +891,11 @@
         <div class="ph-title-row">
           <div class="ph-title">Auditor's Report</div>
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-            <select id="audit-ai-select" class="ai-select-dropdown" style="display:none;"></select>
             <button class="upload-trigger" data-open-upload-modal>UPLOAD FILES</button>
             <button class="upload-trigger" data-open-analyze-modal>ANALYZE</button>
           </div>
         </div>
+        <div class="ai-pills-row" id="audit-ai-pills"></div>
         <div id="audit-content">
           <p style="color:var(--text-dim); font-size:13px;">Upload and analyze a document to see the auditor's report here.</p>
         </div>
@@ -1104,8 +1123,8 @@ async function selectTicker(ticker, fallbackName) {
     renderDashboard();
     await loadPriceRange(currentRange);
     renderSavedBundles();
-    delete finAiSelectEl.dataset.populated;
-    delete auditAiSelectEl.dataset.populated;
+    selectedFinConnId = null;
+    selectedAuditConnId = null;
     renderFinancialsSection();
     renderAuditSection();
     if (newsDrawerOpen) {
@@ -1990,9 +2009,16 @@ function callAI(conn, promptText) {
     body: JSON.stringify({
       model: conn.model,
       messages: [{ role: "user", content: promptText }],
+      max_tokens: 4096,
     }),
-  }).then(function (res) { return res.json(); }).then(function (data) {
-    if (data.error) throw new Error(data.error.message || "API error");
+  }).then(function (res) {
+    return res.json().then(function (data) { return { status: res.status, data: data }; });
+  }).then(function (result) {
+    if (result.data.error) {
+      const msg = typeof result.data.error === "string" ? result.data.error : (result.data.error.message || JSON.stringify(result.data.error));
+      throw new Error("HTTP " + result.status + " — " + msg);
+    }
+    const data = result.data;
     return data.choices && data.choices[0] ? data.choices[0].message.content : "";
   });
 }
@@ -2166,7 +2192,8 @@ function isLowerBetter(key) {
 /* ===== Financials table rendering ===== */
 let yoyActive = false;
 let qoqActive = false;
-const finAiSelectEl = document.getElementById("fin-ai-select");
+let selectedFinConnId = null;
+let selectedAuditConnId = null;
 
 document.getElementById("yoy-toggle-btn").addEventListener("click", function () {
   yoyActive = !yoyActive;
@@ -2182,18 +2209,18 @@ document.getElementById("qoq-toggle-btn").addEventListener("click", function () 
   document.getElementById("yoy-toggle-btn").classList.remove("active");
   renderFinancialsSection();
 });
-finAiSelectEl.addEventListener("change", renderFinancialsSection);
 
 function renderFinancialsSection() {
   const container = document.getElementById("financials-content");
-  if (!currentRecord) { container.innerHTML = "<p style=\"color:var(--text-dim);font-size:13px;\">Select a company first.</p>"; return; }
+  const pillsEl = document.getElementById("fin-ai-pills");
+  if (!currentRecord) { container.innerHTML = "<p style=\"color:var(--text-dim);font-size:13px;\">Select a company first.</p>"; pillsEl.innerHTML = ""; return; }
 
   getBundlesForTicker(currentRecord.ticker).then(function (bundles) {
     const withFin = bundles.filter(function (b) { return b.analysis && b.analysis.financials && Object.keys(b.analysis.financials).length > 0; });
 
     if (withFin.length === 0) {
       container.innerHTML = "<p style=\"color:var(--text-dim);font-size:13px;\">Upload and analyze a document to see financials here.</p>";
-      finAiSelectEl.style.display = "none";
+      pillsEl.innerHTML = "";
       return;
     }
 
@@ -2203,16 +2230,23 @@ function renderFinancialsSection() {
     });
     const connIds = Object.keys(connIdsSet);
 
-    if (connIds.length > 1) {
-      finAiSelectEl.style.display = "inline-block";
-      if (!finAiSelectEl.dataset.populated) {
-        finAiSelectEl.innerHTML = connIds.map(function (cid) { return '<option value="' + cid + '">' + connIdsSet[cid] + '</option>'; }).join("");
-        finAiSelectEl.dataset.populated = "1";
-      }
-    } else {
-      finAiSelectEl.style.display = "none";
+    if (!selectedFinConnId || connIds.indexOf(selectedFinConnId) === -1) {
+      selectedFinConnId = connIds[0];
     }
-    const selectedConnId = connIds.length > 1 ? (finAiSelectEl.value || connIds[0]) : connIds[0];
+
+    pillsEl.innerHTML = "";
+    connIds.forEach(function (cid) {
+      const pill = document.createElement("button");
+      pill.className = "ai-pill" + (cid === selectedFinConnId ? " active" : "");
+      pill.textContent = connIdsSet[cid];
+      pill.addEventListener("click", function () {
+        selectedFinConnId = cid;
+        renderFinancialsSection();
+      });
+      pillsEl.appendChild(pill);
+    });
+
+    const selectedConnId = selectedFinConnId;
 
     withFin.sort(periodCompare);
     const periodsData = withFin.map(function (b) {
@@ -2277,19 +2311,17 @@ function renderFinancialsSection() {
 }
 
 /* ===== Auditor Report rendering ===== */
-const auditAiSelectEl = document.getElementById("audit-ai-select");
-auditAiSelectEl.addEventListener("change", renderAuditSection);
-
 function renderAuditSection() {
   const container = document.getElementById("audit-content");
-  if (!currentRecord) { container.innerHTML = "<p style=\"color:var(--text-dim);font-size:13px;\">Select a company first.</p>"; return; }
+  const pillsEl = document.getElementById("audit-ai-pills");
+  if (!currentRecord) { container.innerHTML = "<p style=\"color:var(--text-dim);font-size:13px;\">Select a company first.</p>"; pillsEl.innerHTML = ""; return; }
 
   getBundlesForTicker(currentRecord.ticker).then(function (bundles) {
     const withAudit = bundles.filter(function (b) { return b.analysis && b.analysis.audit && Object.keys(b.analysis.audit).length > 0; });
 
     if (withAudit.length === 0) {
       container.innerHTML = "<p style=\"color:var(--text-dim);font-size:13px;\">Upload and analyze a document to see the Auditor Report here.</p>";
-      auditAiSelectEl.style.display = "none";
+      pillsEl.innerHTML = "";
       return;
     }
 
@@ -2299,16 +2331,23 @@ function renderAuditSection() {
     });
     const connIds = Object.keys(connIdsSet);
 
-    if (connIds.length > 1) {
-      auditAiSelectEl.style.display = "inline-block";
-      if (!auditAiSelectEl.dataset.populated) {
-        auditAiSelectEl.innerHTML = connIds.map(function (cid) { return '<option value="' + cid + '">' + connIdsSet[cid] + '</option>'; }).join("");
-        auditAiSelectEl.dataset.populated = "1";
-      }
-    } else {
-      auditAiSelectEl.style.display = "none";
+    if (!selectedAuditConnId || connIds.indexOf(selectedAuditConnId) === -1) {
+      selectedAuditConnId = connIds[0];
     }
-    const selectedConnId = connIds.length > 1 ? (auditAiSelectEl.value || connIds[0]) : connIds[0];
+
+    pillsEl.innerHTML = "";
+    connIds.forEach(function (cid) {
+      const pill = document.createElement("button");
+      pill.className = "ai-pill" + (cid === selectedAuditConnId ? " active" : "");
+      pill.textContent = connIdsSet[cid];
+      pill.addEventListener("click", function () {
+        selectedAuditConnId = cid;
+        renderAuditSection();
+      });
+      pillsEl.appendChild(pill);
+    });
+
+    const selectedConnId = selectedAuditConnId;
 
     withAudit.sort(periodCompare);
     let html = "";
