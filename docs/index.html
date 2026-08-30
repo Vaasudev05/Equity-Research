@@ -2210,17 +2210,16 @@ function extractPdfText(file) {
 }
 
 /* ===== Prompt builders ===== */
-function buildFinancialsPrompt(periodLabel, text) {
+function buildFinancialsPrompt(periodLabel, text, statementKey, statementLabel) {
   return "You are analyzing a financial statement document for the period " + periodLabel + ".\n\n" +
-    "Extract the Balance Sheet, Profit and Loss, and Cash Flow figures you can find in the text below. " +
+    "Extract ONLY the " + statementLabel + " figures you can find in the text below — do not extract any other statement. " +
     "Respond ONLY with valid JSON, no other text, in this shape:\n" +
-    '{"balance_sheet": {}, "profit_and_loss": {}, "cash_flow": {}, "notes": ""}\n' +
-    "Each of balance_sheet, profit_and_loss and cash_flow must be a FLAT object where every value is a " +
-    "plain string or number — never a nested object. If the document reports both Standalone and " +
-    "Consolidated figures, create two separate keys per line item instead of nesting, for example " +
-    '"Revenue from Operations (Standalone)" and "Revenue from Operations (Consolidated)". ' +
+    '{"' + statementKey + '": {}, "notes": ""}\n' +
+    "The " + statementKey + " object must be FLAT — every value a plain string or number, never a nested object. " +
+    "If the document reports both Standalone and Consolidated figures, create two separate keys per line item " +
+    'instead of nesting, for example "Revenue from Operations (Standalone)" and "Revenue from Operations (Consolidated)". ' +
     "Use the actual line item names found in the document as JSON keys. " +
-    "If a statement is not present in the text, leave that object empty and explain in notes. " +
+    "If this statement is not present in the text, leave the object empty and explain in notes. " +
     "Do not invent figures that are not in the text.\n\n" +
     "DOCUMENT TEXT:\n" + text.slice(0, 150000);
 }
@@ -2321,13 +2320,21 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
   const bundlePromises = selectedBundleIds.map(function (id) { return getBundle(id); });
 
   Promise.all(bundlePromises).then(function (bundles) {
+    const STATEMENTS = [
+      ["balance_sheet", "Balance Sheet"],
+      ["profit_and_loss", "Profit and Loss"],
+      ["cash_flow", "Cash Flow"],
+    ];
+
     let tasks = [];
     bundles.forEach(function (bundle) {
       const financialsFiles = bundle.files.filter(function (f) { return f.tag === "financials" || f.tag === "both"; });
       const auditFiles = bundle.files.filter(function (f) { return f.tag === "audit" || f.tag === "both"; });
 
       if (financialsFiles.length > 0 && (analyzeType === "both" || analyzeType === "financials")) {
-        tasks.push({ bundle: bundle, kind: "financials", files: financialsFiles });
+        STATEMENTS.forEach(function (stmt) {
+          tasks.push({ bundle: bundle, kind: "financials", statementKey: stmt[0], statementLabel: stmt[1], files: financialsFiles });
+        });
       }
       if (auditFiles.length > 0 && (analyzeType === "both" || analyzeType === "audit")) {
         tasks.push({ bundle: bundle, kind: "audit", files: auditFiles });
@@ -2350,29 +2357,45 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
 
       const task = tasks[taskIdx];
       const conn = connections[connIdx];
-      analysisProgressEl.textContent = "Analyzing " + task.bundle.periodLabel + " (" + task.kind + ") with " + conn.nickname + "...";
+      const taskLabel = task.kind === "financials" ? task.statementLabel : "audit";
+      analysisProgressEl.textContent = "Analyzing " + task.bundle.periodLabel + " (" + taskLabel + ") with " + conn.nickname + "...";
 
       const textPromises = task.files.map(function (f) { return extractPdfText(f.blob); });
 
       Promise.all(textPromises).then(function (texts) {
         const combinedText = texts.join("\n\n---\n\n");
         const prompt = task.kind === "financials"
-          ? buildFinancialsPrompt(task.bundle.periodLabel, combinedText)
+          ? buildFinancialsPrompt(task.bundle.periodLabel, combinedText, task.statementKey, task.statementLabel)
           : buildAuditPrompt(task.bundle.periodLabel, combinedText);
 
-        const maxTokens = task.kind === "financials" ? 8000 : 1500;
+        const maxTokens = task.kind === "financials" ? 3000 : 1500;
         return callAI(conn, prompt, maxTokens).then(function (responseText) {
           const parsed = tryParseJSON(responseText);
-          renderResultBlock(task.bundle.periodLabel, task.kind, conn.nickname, parsed || responseText, !!parsed);
+          const resultLabel = task.kind === "financials" ? "Financial Statements (" + task.statementLabel + ")" : "Auditor Report";
+          renderResultBlock(task.bundle.periodLabel, resultLabel, conn.nickname, parsed || responseText, !!parsed);
 
           if (!task.bundle.analysis) task.bundle.analysis = {};
           if (!task.bundle.analysis[task.kind]) task.bundle.analysis[task.kind] = {};
-          task.bundle.analysis[task.kind][conn.id] = {
-            connNickname: conn.nickname,
-            data: parsed,
-            rawText: parsed ? null : responseText,
-            analyzedAt: new Date().toISOString(),
-          };
+
+          if (task.kind === "financials") {
+            const existing = task.bundle.analysis.financials[conn.id] || { connNickname: conn.nickname, data: null, rawText: null, analyzedAt: null };
+            if (parsed) {
+              if (!existing.data) existing.data = {};
+              existing.data[task.statementKey] = parsed[task.statementKey] || {};
+            } else if (!existing.rawText) {
+              existing.rawText = responseText;
+            }
+            existing.connNickname = conn.nickname;
+            existing.analyzedAt = new Date().toISOString();
+            task.bundle.analysis.financials[conn.id] = existing;
+          } else {
+            task.bundle.analysis.audit[conn.id] = {
+              connNickname: conn.nickname,
+              data: parsed,
+              rawText: parsed ? null : responseText,
+              analyzedAt: new Date().toISOString(),
+            };
+          }
           return putBundle(task.bundle);
         }).then(function () {
           completed += 1;
@@ -2380,7 +2403,8 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
           analysisProgressEl.textContent = "Analyzed " + completed + " of " + total + "...";
         });
       }).catch(function (err) {
-        renderResultBlock(task.bundle.periodLabel, task.kind, conn.nickname, "Error: " + err.message, false);
+        const resultLabel = task.kind === "financials" ? "Financial Statements (" + task.statementLabel + ")" : "Auditor Report";
+        renderResultBlock(task.bundle.periodLabel, resultLabel, conn.nickname, "Error: " + err.message, false);
         completed += 1;
         progressFill.style.width = Math.round((completed / total) * 100) + "%";
       }).then(function () {
