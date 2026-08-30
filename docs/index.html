@@ -696,6 +696,97 @@
     color: var(--text);
     line-height: 1.55;
   }
+
+  .modal-section-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .preset-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .preset-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .preset-btn:hover { border-color: var(--accent-dim); }
+  .preset-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+  .conn-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .conn-form-grid { grid-template-columns: 1fr; } }
+
+  .ai-conn-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .analyze-type-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .radio-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .radio-pill:has(input:checked) { border-color: var(--accent); color: var(--accent); }
+
+  .analyze-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 560px) { .analyze-two-col { grid-template-columns: 1fr; } }
+
+  .select-all-link {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    text-transform: none;
+    letter-spacing: 0;
+    cursor: pointer;
+    font-weight: 400;
+  }
+  .select-all-link:hover { text-decoration: underline; }
+
+  .progress-bar-track {
+    width: 100%;
+    height: 5px;
+    background: var(--panel-alt);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 14px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .result-block.result-error { border-left: 3px solid var(--loss); }
+  .result-block.result-success { border-left: 3px solid var(--gain); }
     background: var(--accent);
     color: #17130A;
     border: none;
@@ -973,25 +1064,44 @@
       <span>Manage AI Connections</span>
       <button class="modal-close" id="ai-modal-close-btn">&times;</button>
     </div>
-    <p style="font-size:12px; color:var(--text-dim); margin-bottom:14px; line-height:1.5;">
+    <p style="font-size:12px; color:var(--text-dim); margin-bottom:16px; line-height:1.5;">
       Add any AI service with an API key. Your keys are stored only in this browser and sent
       directly to that provider — never to us or anywhere else. Check "Default" on one or more
       connections to have them pre-selected whenever you run Analyze.
     </p>
+
+    <div class="modal-section-label">Your Connections</div>
     <div id="ai-conn-list"></div>
+
+    <div class="modal-section-label" style="margin-top:20px;">Add a New Connection</div>
     <div class="add-conn-form">
       <div class="field-group">
-        <label>Quick setup (fills format, endpoint &amp; model — just add your key)</label>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button type="button" class="upload-trigger" data-preset="gemini">Gemini</button>
-          <button type="button" class="upload-trigger" data-preset="openai">OpenAI</button>
-          <button type="button" class="upload-trigger" data-preset="claude">Claude</button>
+        <label>Quick Setup</label>
+        <div class="preset-row">
+          <button type="button" class="preset-btn" data-preset="gemini">
+            <span class="preset-dot" style="background:#4285F4;"></span>Gemini
+          </button>
+          <button type="button" class="preset-btn" data-preset="openai">
+            <span class="preset-dot" style="background:#10A37F;"></span>OpenAI
+          </button>
+          <button type="button" class="preset-btn" data-preset="claude">
+            <span class="preset-dot" style="background:#D4A72C;"></span>Claude
+          </button>
+        </div>
+        <div style="font-size:10.5px; color:var(--neutral); margin-top:4px;">Fills format, endpoint &amp; model automatically — just add a nickname and your key.</div>
+      </div>
+
+      <div class="conn-form-grid">
+        <div class="field-group">
+          <label>Nickname</label>
+          <input type="text" id="conn-nickname" placeholder="e.g. My Claude" />
+        </div>
+        <div class="field-group">
+          <label>Model name</label>
+          <input type="text" id="conn-model" placeholder="e.g. claude-sonnet-5" />
         </div>
       </div>
-      <div class="field-group">
-        <label>Nickname</label>
-        <input type="text" id="conn-nickname" placeholder="e.g. My Claude" />
-      </div>
+
       <div class="field-group">
         <label>Format</label>
         <select id="conn-format">
@@ -1002,10 +1112,6 @@
       <div class="field-group" id="conn-baseurl-group">
         <label>API Base URL</label>
         <input type="text" id="conn-baseurl" placeholder="https://api.openai.com/v1/chat/completions" />
-      </div>
-      <div class="field-group">
-        <label>Model name</label>
-        <input type="text" id="conn-model" placeholder="e.g. claude-sonnet-4-5 or gpt-4o" />
       </div>
       <div class="field-group">
         <label>API Key</label>
@@ -1023,18 +1129,35 @@
       <button class="modal-close" id="analyze-modal-close-btn">&times;</button>
     </div>
 
-    <div class="field-group" style="margin-bottom:14px;">
-      <label>AI Connections to use</label>
-      <div id="analyze-ai-list"></div>
+    <div class="modal-section-label">What should be analyzed?</div>
+    <div class="analyze-type-row" id="analyze-type-row">
+      <label class="radio-pill"><input type="radio" name="analyze-type" value="both" checked /> Both</label>
+      <label class="radio-pill"><input type="radio" name="analyze-type" value="financials" /> Financials only</label>
+      <label class="radio-pill"><input type="radio" name="analyze-type" value="audit" /> Audit Report only</label>
     </div>
 
-    <div class="field-group" style="margin-bottom:14px;">
-      <label>Periods to analyze</label>
-      <div id="analyze-period-list"></div>
+    <div class="analyze-two-col">
+      <div>
+        <div class="modal-section-label">
+          AI Connections
+          <span class="select-all-link" id="ai-select-all">select all</span>
+        </div>
+        <div id="analyze-ai-list"></div>
+      </div>
+      <div>
+        <div class="modal-section-label">
+          Periods
+          <span class="select-all-link" id="period-select-all">select all</span>
+        </div>
+        <div id="analyze-period-list"></div>
+      </div>
     </div>
 
-    <button class="save-bundle-btn" id="run-analysis-btn">Run Analysis</button>
+    <button class="save-bundle-btn" id="run-analysis-btn" style="margin-top:16px;">Run Analysis</button>
 
+    <div class="progress-bar-track" id="progress-bar-track" style="display:none;">
+      <div class="progress-bar-fill" id="progress-bar-fill"></div>
+    </div>
     <div id="analysis-progress"></div>
     <div id="analysis-results"></div>
   </div>
@@ -1880,27 +2003,26 @@ function renderAIConnections() {
 function purgeConnectionResults(connId) {
   return openDocsDB().then(function (db) {
     return new Promise(function (resolve, reject) {
-      const tx = db.transaction(STORE_NAME, "readwrite");
-      const store = tx.objectStore(STORE_NAME);
-      const request = store.getAll();
-      request.onsuccess = function () {
-        const all = request.result || [];
-        all.forEach(function (bundle) {
-          let changed = false;
-          if (bundle.analysis && bundle.analysis.financials && bundle.analysis.financials[connId]) {
-            delete bundle.analysis.financials[connId];
-            changed = true;
-          }
-          if (bundle.analysis && bundle.analysis.audit && bundle.analysis.audit[connId]) {
-            delete bundle.analysis.audit[connId];
-            changed = true;
-          }
-          if (changed) store.put(bundle);
-        });
-      };
-      tx.oncomplete = function () { resolve(); };
-      tx.onerror = function () { reject(tx.error); };
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const request = tx.objectStore(STORE_NAME).getAll();
+      request.onsuccess = function () { resolve(request.result || []); };
+      request.onerror = function () { reject(request.error); };
     });
+  }).then(function (allBundles) {
+    const toUpdate = [];
+    allBundles.forEach(function (bundle) {
+      let changed = false;
+      if (bundle.analysis && bundle.analysis.financials && bundle.analysis.financials[connId]) {
+        delete bundle.analysis.financials[connId];
+        changed = true;
+      }
+      if (bundle.analysis && bundle.analysis.audit && bundle.analysis.audit[connId]) {
+        delete bundle.analysis.audit[connId];
+        changed = true;
+      }
+      if (changed) toUpdate.push(bundle);
+    });
+    return Promise.all(toUpdate.map(function (b) { return putBundle(b); }));
   });
 }
 
@@ -2012,9 +2134,21 @@ analyzeModalOverlay.addEventListener("click", function (e) {
   if (e.target === analyzeModalOverlay) analyzeModalOverlay.classList.remove("open");
 });
 
+document.getElementById("ai-select-all").addEventListener("click", function () {
+  const boxes = analyzeAiListEl.querySelectorAll("input[type=checkbox]");
+  const allChecked = Array.prototype.every.call(boxes, function (cb) { return cb.checked; });
+  boxes.forEach(function (cb) { cb.checked = !allChecked; });
+});
+document.getElementById("period-select-all").addEventListener("click", function () {
+  const boxes = analyzePeriodListEl.querySelectorAll("input[type=checkbox]");
+  const allChecked = Array.prototype.every.call(boxes, function (cb) { return cb.checked; });
+  boxes.forEach(function (cb) { cb.checked = !allChecked; });
+});
+
 function renderAnalyzeModal() {
   analysisResultsEl.innerHTML = "";
   analysisProgressEl.textContent = "";
+  document.getElementById("progress-bar-track").style.display = "none";
 
   const connections = getAIConnections();
   analyzeAiListEl.innerHTML = "";
@@ -2174,9 +2308,14 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
 
   const allConnections = getAIConnections();
   const connections = allConnections.filter(function (c) { return selectedConnIds.indexOf(c.id) !== -1; });
+  const analyzeType = document.querySelector('input[name="analyze-type"]:checked').value;
 
   analysisResultsEl.innerHTML = "";
   analysisProgressEl.textContent = "Reading documents...";
+  const progressTrack = document.getElementById("progress-bar-track");
+  const progressFill = document.getElementById("progress-bar-fill");
+  progressTrack.style.display = "block";
+  progressFill.style.width = "0%";
 
   const bundlePromises = selectedBundleIds.map(function (id) { return getBundle(id); });
 
@@ -2186,10 +2325,10 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
       const financialsFiles = bundle.files.filter(function (f) { return f.tag === "financials" || f.tag === "both"; });
       const auditFiles = bundle.files.filter(function (f) { return f.tag === "audit" || f.tag === "both"; });
 
-      if (financialsFiles.length > 0) {
+      if (financialsFiles.length > 0 && (analyzeType === "both" || analyzeType === "financials")) {
         tasks.push({ bundle: bundle, kind: "financials", files: financialsFiles });
       }
-      if (auditFiles.length > 0) {
+      if (auditFiles.length > 0 && (analyzeType === "both" || analyzeType === "audit")) {
         tasks.push({ bundle: bundle, kind: "audit", files: auditFiles });
       }
     });
@@ -2200,6 +2339,7 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
     function runNext(taskIdx, connIdx) {
       if (taskIdx >= tasks.length) {
         analysisProgressEl.textContent = "Done — " + completed + " of " + total + " analyses completed.";
+        progressFill.style.width = "100%";
         return;
       }
       if (connIdx >= connections.length) {
@@ -2221,7 +2361,7 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
 
         return callAI(conn, prompt).then(function (responseText) {
           const parsed = tryParseJSON(responseText);
-          renderResultBlock(task.bundle.periodLabel, task.kind, conn.nickname, parsed || responseText);
+          renderResultBlock(task.bundle.periodLabel, task.kind, conn.nickname, parsed || responseText, !!parsed);
 
           if (!task.bundle.analysis) task.bundle.analysis = {};
           if (!task.bundle.analysis[task.kind]) task.bundle.analysis[task.kind] = {};
@@ -2234,14 +2374,22 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
           return putBundle(task.bundle);
         }).then(function () {
           completed += 1;
+          progressFill.style.width = Math.round((completed / total) * 100) + "%";
           analysisProgressEl.textContent = "Analyzed " + completed + " of " + total + "...";
         });
       }).catch(function (err) {
-        renderResultBlock(task.bundle.periodLabel, task.kind, conn.nickname, "Error: " + err.message);
+        renderResultBlock(task.bundle.periodLabel, task.kind, conn.nickname, "Error: " + err.message, false);
         completed += 1;
+        progressFill.style.width = Math.round((completed / total) * 100) + "%";
       }).then(function () {
         runNext(taskIdx, connIdx + 1);
       });
+    }
+
+    if (tasks.length === 0) {
+      analysisProgressEl.textContent = "No matching documents for this selection — check your Financials/Audit tags or period choice.";
+      progressTrack.style.display = "none";
+      return;
     }
 
     runNext(0, 0);
@@ -2256,9 +2404,9 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
   });
 });
 
-function renderResultBlock(periodLabel, kind, connNickname, content) {
+function renderResultBlock(periodLabel, kind, connNickname, content, isSuccess) {
   const block = document.createElement("div");
-  block.className = "result-block";
+  block.className = "result-block " + (isSuccess ? "result-success" : "result-error");
   const kindLabel = kind === "financials" ? "Financial Statements" : "Auditor Report";
   block.innerHTML =
     '<div class="result-header">' + periodLabel + " — " + kindLabel + " — " + connNickname + '</div>' +
@@ -2360,7 +2508,9 @@ function renderFinancialsSection() {
 
     const connIdsSet = {};
     withFin.forEach(function (b) {
-      Object.keys(b.analysis.financials).forEach(function (cid) { connIdsSet[cid] = b.analysis.financials[cid].connNickname; });
+      Object.keys(b.analysis.financials).forEach(function (cid) {
+        if (b.analysis.financials[cid].data) connIdsSet[cid] = b.analysis.financials[cid].connNickname;
+      });
     });
     const connIds = Object.keys(connIdsSet);
 
@@ -2461,7 +2611,9 @@ function renderAuditSection() {
 
     const connIdsSet = {};
     withAudit.forEach(function (b) {
-      Object.keys(b.analysis.audit).forEach(function (cid) { connIdsSet[cid] = b.analysis.audit[cid].connNickname; });
+      Object.keys(b.analysis.audit).forEach(function (cid) {
+        if (b.analysis.audit[cid].data) connIdsSet[cid] = b.analysis.audit[cid].connNickname;
+      });
     });
     const connIds = Object.keys(connIdsSet);
 
