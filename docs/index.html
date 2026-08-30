@@ -674,6 +674,28 @@
   .opinion-badge.notfound { background: var(--border); color: var(--text-dim); }
   .audit-sub-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; margin: 10px 0 4px; }
   .audit-list { font-size: 12.5px; color: var(--text); line-height: 1.6; padding-left: 18px; margin: 0; }
+
+  .audit-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .audit-row:last-child { border-bottom: none; }
+  @media (max-width: 640px) { .audit-row { grid-template-columns: 1fr; gap: 4px; } }
+  .audit-row-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding-top: 2px;
+  }
+  .audit-row-value {
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.55;
+  }
     background: var(--accent);
     color: #17130A;
     border: none;
@@ -958,6 +980,14 @@
     </p>
     <div id="ai-conn-list"></div>
     <div class="add-conn-form">
+      <div class="field-group">
+        <label>Quick setup (fills format, endpoint &amp; model — just add your key)</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="upload-trigger" data-preset="gemini">Gemini</button>
+          <button type="button" class="upload-trigger" data-preset="openai">OpenAI</button>
+          <button type="button" class="upload-trigger" data-preset="claude">Claude</button>
+        </div>
+      </div>
       <div class="field-group">
         <label>Nickname</label>
         <input type="text" id="conn-nickname" placeholder="e.g. My Claude" />
@@ -1822,21 +1852,100 @@ function renderAIConnections() {
     label.appendChild(cb);
     label.appendChild(document.createTextNode("Default"));
 
+    const editBtn = document.createElement("button");
+    editBtn.className = "bundle-btn";
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener("click", function () { startEditConnection(conn); });
+
     const removeBtn = document.createElement("button");
     removeBtn.className = "remove-row-btn";
     removeBtn.textContent = "×";
     removeBtn.addEventListener("click", function () {
       const filtered = list.filter(function (c) { return c.id !== conn.id; });
       saveAIConnections(filtered);
-      renderAIConnections();
+      purgeConnectionResults(conn.id).then(function () {
+        renderAIConnections();
+        if (currentRecord) { renderFinancialsSection(); renderAuditSection(); }
+      });
     });
 
     row.appendChild(info);
     row.appendChild(label);
+    row.appendChild(editBtn);
     row.appendChild(removeBtn);
     aiConnListEl.appendChild(row);
   });
 }
+
+function purgeConnectionResults(connId) {
+  return openDocsDB().then(function (db) {
+    return new Promise(function (resolve, reject) {
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      const store = tx.objectStore(STORE_NAME);
+      const request = store.getAll();
+      request.onsuccess = function () {
+        const all = request.result || [];
+        all.forEach(function (bundle) {
+          let changed = false;
+          if (bundle.analysis && bundle.analysis.financials && bundle.analysis.financials[connId]) {
+            delete bundle.analysis.financials[connId];
+            changed = true;
+          }
+          if (bundle.analysis && bundle.analysis.audit && bundle.analysis.audit[connId]) {
+            delete bundle.analysis.audit[connId];
+            changed = true;
+          }
+          if (changed) store.put(bundle);
+        });
+      };
+      tx.oncomplete = function () { resolve(); };
+      tx.onerror = function () { reject(tx.error); };
+    });
+  });
+}
+
+let editingConnId = null;
+
+function startEditConnection(conn) {
+  editingConnId = conn.id;
+  document.getElementById("conn-nickname").value = conn.nickname;
+  connFormatEl.value = conn.format;
+  connBaseUrlGroup.style.display = conn.format === "openai-compatible" ? "flex" : "none";
+  connBaseUrlEl.value = conn.baseUrl || "";
+  document.getElementById("conn-model").value = conn.model;
+  document.getElementById("conn-apikey").value = conn.apiKey;
+  document.getElementById("add-conn-btn").textContent = "Update Connection";
+}
+
+function resetConnectionForm() {
+  editingConnId = null;
+  document.getElementById("conn-nickname").value = "";
+  document.getElementById("conn-model").value = "";
+  document.getElementById("conn-apikey").value = "";
+  document.getElementById("add-conn-btn").textContent = "Add Connection";
+}
+
+document.querySelectorAll("[data-preset]").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    const preset = btn.getAttribute("data-preset");
+    if (preset === "gemini") {
+      connFormatEl.value = "openai-compatible";
+      connBaseUrlEl.value = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+      document.getElementById("conn-model").value = "gemini-3.6-flash";
+    } else if (preset === "openai") {
+      connFormatEl.value = "openai-compatible";
+      connBaseUrlEl.value = "https://api.openai.com/v1/chat/completions";
+      document.getElementById("conn-model").value = "gpt-4o-mini";
+    } else if (preset === "claude") {
+      connFormatEl.value = "anthropic";
+      document.getElementById("conn-model").value = "claude-sonnet-5";
+    }
+    connBaseUrlGroup.style.display = connFormatEl.value === "openai-compatible" ? "flex" : "none";
+    if (!document.getElementById("conn-nickname").value) {
+      document.getElementById("conn-nickname").value = btn.textContent;
+    }
+  });
+});
 
 document.getElementById("add-conn-btn").addEventListener("click", function () {
   const nickname = document.getElementById("conn-nickname").value.trim();
@@ -1851,20 +1960,29 @@ document.getElementById("add-conn-btn").addEventListener("click", function () {
   }
 
   const list = getAIConnections();
-  list.push({
-    id: "conn_" + Date.now(),
-    nickname: nickname,
-    format: format,
-    baseUrl: format === "openai-compatible" ? baseUrl : null,
-    model: model,
-    apiKey: apiKey,
-    isDefault: list.length === 0,
-  });
-  saveAIConnections(list);
 
-  document.getElementById("conn-nickname").value = "";
-  document.getElementById("conn-model").value = "";
-  document.getElementById("conn-apikey").value = "";
+  if (editingConnId) {
+    const existing = list.find(function (c) { return c.id === editingConnId; });
+    if (existing) {
+      existing.nickname = nickname;
+      existing.format = format;
+      existing.baseUrl = format === "openai-compatible" ? baseUrl : null;
+      existing.model = model;
+      existing.apiKey = apiKey;
+    }
+  } else {
+    list.push({
+      id: "conn_" + Date.now(),
+      nickname: nickname,
+      format: format,
+      baseUrl: format === "openai-compatible" ? baseUrl : null,
+      model: model,
+      apiKey: apiKey,
+      isDefault: list.length === 0,
+    });
+  }
+  saveAIConnections(list);
+  resetConnectionForm();
   renderAIConnections();
 });
 
@@ -1963,19 +2081,27 @@ function buildFinancialsPrompt(periodLabel, text) {
     "Extract the Balance Sheet, Profit and Loss, and Cash Flow figures you can find in the text below. " +
     "Respond ONLY with valid JSON, no other text, in this shape:\n" +
     '{"balance_sheet": {}, "profit_and_loss": {}, "cash_flow": {}, "notes": ""}\n' +
+    "Each of balance_sheet, profit_and_loss and cash_flow must be a FLAT object where every value is a " +
+    "plain string or number — never a nested object. If the document reports both Standalone and " +
+    "Consolidated figures, create two separate keys per line item instead of nesting, for example " +
+    '"Revenue from Operations (Standalone)" and "Revenue from Operations (Consolidated)". ' +
     "Use the actual line item names found in the document as JSON keys. " +
     "If a statement is not present in the text, leave that object empty and explain in notes. " +
     "Do not invent figures that are not in the text.\n\n" +
-    "DOCUMENT TEXT:\n" + text.slice(0, 60000);
+    "DOCUMENT TEXT:\n" + text.slice(0, 150000);
 }
 
 function buildAuditPrompt(periodLabel, text) {
   return "You are analyzing an auditor's report for the period " + periodLabel + ".\n\n" +
     "Respond ONLY with valid JSON, no other text, in this shape:\n" +
-    '{"opinion_type": "", "reasons_if_not_unmodified": "", "key_audit_matters": [], "emphasis_of_matter": [], "other_matter": []}\n' +
+    '{"opinion_type": "", "reasons_if_not_unmodified": "", "kam_summary": "", "emphasis_of_matter_summary": "", "other_matter_summary": ""}\n' +
     "opinion_type must be one of: Unmodified, Qualified, Adverse, Disclaimer, Not Found. " +
-    "If the auditor's opinion is not present in this text, set opinion_type to \"Not Found\" rather than guessing.\n\n" +
-    "DOCUMENT TEXT:\n" + text.slice(0, 60000);
+    "If the auditor's opinion is not present in this text, set opinion_type to \"Not Found\" rather than guessing. " +
+    "For kam_summary, emphasis_of_matter_summary and other_matter_summary: write a concise summary IN YOUR OWN " +
+    "WORDS covering the substance of all matters in that category combined, at most 2-3 sentences each. " +
+    "Do NOT copy full paragraphs verbatim from the source text — condense and paraphrase. " +
+    "If a category has no matters in the document, use an empty string.\n\n" +
+    "DOCUMENT TEXT:\n" + text.slice(0, 150000);
 }
 
 /* ===== Calling AI providers ===== */
@@ -2189,6 +2315,14 @@ function isLowerBetter(key) {
   return keywords.some(function (kw) { return k.indexOf(kw) !== -1; });
 }
 
+function flattenValue(val) {
+  if (val === undefined || val === null || val === "") return "—";
+  if (typeof val === "object") {
+    return Object.keys(val).map(function (k) { return k + ": " + val[k]; }).join(", ");
+  }
+  return val;
+}
+
 /* ===== Financials table rendering ===== */
 let yoyActive = false;
 let qoqActive = false;
@@ -2281,7 +2415,7 @@ function renderFinancialsSection() {
         html += "<tr><td>" + rowKey + "</td>";
         periodsData.forEach(function (p) {
           const val = p.data[key] ? p.data[key][rowKey] : undefined;
-          const displayVal = (val === undefined || val === null || val === "") ? "—" : val;
+          const displayVal = flattenValue(val);
           let cellClass = "";
 
           if (yoyActive || qoqActive) {
@@ -2359,25 +2493,35 @@ function renderAuditSection() {
       let opClass = (d.opinion_type || "").toLowerCase().replace(/[^a-z]/g, "");
       if (["unmodified", "qualified", "adverse", "disclaimer"].indexOf(opClass) === -1) opClass = "notfound";
 
-      html += '<div class="audit-period-card">';
-      html += '<div class="audit-period-header"><span class="bundle-period-label">' + b.periodLabel + '</span>' +
-        '<span class="opinion-badge ' + opClass + '">' + (d.opinion_type || "Not Found") + '</span></div>';
+      // Backward compatibility: older saved results used arrays (key_audit_matters: [...])
+      // instead of a single summary string. Join arrays into a readable line if that shape is found.
+      function toSummaryText(newField, oldArrayField) {
+        if (d[newField]) return d[newField];
+        if (d[oldArrayField] && d[oldArrayField].length) return d[oldArrayField].join(" ");
+        return "";
+      }
+      const kamText = toSummaryText("kam_summary", "key_audit_matters");
+      const eomText = toSummaryText("emphasis_of_matter_summary", "emphasis_of_matter");
+      const omText = toSummaryText("other_matter_summary", "other_matter");
 
-      if (d.reasons_if_not_unmodified) {
-        html += '<div class="audit-sub-label">Reasons</div><div style="font-size:12.5px;">' + d.reasons_if_not_unmodified + '</div>';
-      }
-      if (d.key_audit_matters && d.key_audit_matters.length) {
-        html += '<div class="audit-sub-label">Key Audit Matters</div><ul class="audit-list">' +
-          d.key_audit_matters.map(function (x) { return "<li>" + x + "</li>"; }).join("") + '</ul>';
-      }
-      if (d.emphasis_of_matter && d.emphasis_of_matter.length) {
-        html += '<div class="audit-sub-label">Emphasis of Matter</div><ul class="audit-list">' +
-          d.emphasis_of_matter.map(function (x) { return "<li>" + x + "</li>"; }).join("") + '</ul>';
-      }
-      if (d.other_matter && d.other_matter.length) {
-        html += '<div class="audit-sub-label">Other Matter</div><ul class="audit-list">' +
-          d.other_matter.map(function (x) { return "<li>" + x + "</li>"; }).join("") + '</ul>';
-      }
+      html += '<div class="audit-period-card">';
+      html += '<div class="audit-period-header"><span class="bundle-period-label">' + b.periodLabel + '</span></div>';
+
+      html += '<div class="audit-row"><div class="audit-row-label">Type of Opinion</div>' +
+        '<div class="audit-row-value"><span class="opinion-badge ' + opClass + '">' + (d.opinion_type || "Not Found") + '</span></div></div>';
+
+      html += '<div class="audit-row"><div class="audit-row-label">Reason (if not Unmodified)</div>' +
+        '<div class="audit-row-value">' + (d.reasons_if_not_unmodified || "—") + '</div></div>';
+
+      html += '<div class="audit-row"><div class="audit-row-label">Key Audit Matters (Summary)</div>' +
+        '<div class="audit-row-value">' + (kamText || "—") + '</div></div>';
+
+      html += '<div class="audit-row"><div class="audit-row-label">Emphasis of Matter (Summary)</div>' +
+        '<div class="audit-row-value">' + (eomText || "—") + '</div></div>';
+
+      html += '<div class="audit-row"><div class="audit-row-label">Other Matter (Summary)</div>' +
+        '<div class="audit-row-value">' + (omText || "—") + '</div></div>';
+
       html += "</div>";
     });
 
