@@ -2239,7 +2239,8 @@ function buildAuditPrompt(periodLabel, text) {
 }
 
 /* ===== Calling AI providers ===== */
-function callAI(conn, promptText) {
+function callAI(conn, promptText, maxTokens) {
+  const tokenBudget = maxTokens || 4096;
   if (conn.format === "anthropic") {
     return fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -2251,7 +2252,7 @@ function callAI(conn, promptText) {
       },
       body: JSON.stringify({
         model: conn.model,
-        max_tokens: 2048,
+        max_tokens: tokenBudget,
         messages: [{ role: "user", content: promptText }],
       }),
     }).then(function (res) { return res.json(); }).then(function (data) {
@@ -2269,7 +2270,7 @@ function callAI(conn, promptText) {
     body: JSON.stringify({
       model: conn.model,
       messages: [{ role: "user", content: promptText }],
-      max_tokens: 4096,
+      max_tokens: tokenBudget,
     }),
   }).then(function (res) {
     return res.json().then(function (data) { return { status: res.status, data: data }; });
@@ -2359,7 +2360,8 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
           ? buildFinancialsPrompt(task.bundle.periodLabel, combinedText)
           : buildAuditPrompt(task.bundle.periodLabel, combinedText);
 
-        return callAI(conn, prompt).then(function (responseText) {
+        const maxTokens = task.kind === "financials" ? 8000 : 1500;
+        return callAI(conn, prompt, maxTokens).then(function (responseText) {
           const parsed = tryParseJSON(responseText);
           renderResultBlock(task.bundle.periodLabel, task.kind, conn.nickname, parsed || responseText, !!parsed);
 
