@@ -2368,7 +2368,10 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
           ? buildFinancialsPrompt(task.bundle.periodLabel, combinedText, task.statementKey, task.statementLabel)
           : buildAuditPrompt(task.bundle.periodLabel, combinedText);
 
-        const maxTokens = task.kind === "financials" ? 3000 : 1500;
+        let maxTokens = 1500;
+        if (task.kind === "financials") {
+          maxTokens = task.statementKey === "profit_and_loss" ? 7000 : 3000;
+        }
         return callAI(conn, prompt, maxTokens).then(function (responseText) {
           const parsed = tryParseJSON(responseText);
           const resultLabel = task.kind === "financials" ? "Financial Statements (" + task.statementLabel + ")" : "Auditor Report";
