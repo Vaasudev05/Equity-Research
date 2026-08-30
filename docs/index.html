@@ -2270,6 +2270,7 @@ function callAI(conn, promptText, maxTokens) {
       model: conn.model,
       messages: [{ role: "user", content: promptText }],
       max_tokens: tokenBudget,
+      reasoning_effort: "low",
     }),
   }).then(function (res) {
     return res.json().then(function (data) { return { status: res.status, data: data }; });
