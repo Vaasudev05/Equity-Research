@@ -949,6 +949,10 @@
       "name": "AU Small Finance Bank Limited"
     },
     {
+      "ticker": "AUGMONT.NS",
+      "name": "Augmont Enterprises Limited"
+    },
+    {
       "ticker": "AURIONPRO.NS",
       "name": "Aurionpro Solutions Limited"
     },
@@ -1323,6 +1327,10 @@
     {
       "ticker": "BFUTILITIE.NS",
       "name": "BF Utilities Limited"
+    },
+    {
+      "ticker": "BGLOBAL.NS",
+      "name": "Bharatiya Global Infomedia Limited"
     },
     {
       "ticker": "BGRENERGY.NS",
@@ -1909,6 +1917,10 @@
       "name": "Chaman Lal Setia Exports Limited"
     },
     {
+      "ticker": "CMICABLES.NS",
+      "name": "CMI Limited"
+    },
+    {
       "ticker": "CMLL.NS",
       "name": "Caliber Mining and Logistics Limited"
     },
@@ -2401,6 +2413,10 @@
       "name": "Digjam Limited"
     },
     {
+      "ticker": "DIL.NS",
+      "name": "Debock Industries Limited"
+    },
+    {
       "ticker": "DISAQ.NS",
       "name": "Disa India Limited"
     },
@@ -2579,6 +2595,10 @@
     {
       "ticker": "EDELWEISS.NS",
       "name": "Edelweiss Financial Services Limited"
+    },
+    {
+      "ticker": "EDUCOMP.NS",
+      "name": "Educomp Solutions Limited"
     },
     {
       "ticker": "EFCIL.NS",
@@ -2877,6 +2897,10 @@
       "name": "Fineotex Chemical Limited"
     },
     {
+      "ticker": "FCONSUMER.NS",
+      "name": "Future Consumer Limited"
+    },
+    {
       "ticker": "FCSSOFT.NS",
       "name": "FCS Software Solutions Limited"
     },
@@ -3033,6 +3057,10 @@
       "name": "GAIL (India) Limited"
     },
     {
+      "ticker": "GAJA.NS",
+      "name": "Gaja Alternative Asset Management Limited"
+    },
+    {
       "ticker": "GALAPREC.NS",
       "name": "Gala Precision Engineering Limited"
     },
@@ -3155,6 +3183,10 @@
     {
       "ticker": "GFLLIMITED.NS",
       "name": "GFL Limited"
+    },
+    {
+      "ticker": "GFSTEELS.NS",
+      "name": "Grand Foundry Limited"
     },
     {
       "ticker": "GHCL.NS",
@@ -5045,6 +5077,10 @@
       "name": "KSH International Limited"
     },
     {
+      "ticker": "KSHITIJ-RE.NS",
+      "name": "Kshitij Polyline Ltd-RE"
+    },
+    {
       "ticker": "KSHITIJPOL.NS",
       "name": "Kshitij Polyline Limited"
     },
@@ -5877,6 +5913,10 @@
       "name": "Monte Carlo Fashions Limited"
     },
     {
+      "ticker": "MORARJEE.NS",
+      "name": "Morarjee Textiles Limited"
+    },
+    {
       "ticker": "MOREPENLAB.NS",
       "name": "Morepen Laboratories Limited"
     },
@@ -6015,6 +6055,10 @@
     {
       "ticker": "NACLIND.NS",
       "name": "NACL Industries Limited"
+    },
+    {
+      "ticker": "NAGAFERT.NS",
+      "name": "Nagarjuna Fertilizers and Chemicals Limited"
     },
     {
       "ticker": "NAGREEKCAP.NS",
@@ -6563,6 +6607,10 @@
     {
       "ticker": "ORKLAINDIA.NS",
       "name": "Orkla India Limited"
+    },
+    {
+      "ticker": "ORTEL.NS",
+      "name": "Ortel Communications Limited"
     },
     {
       "ticker": "ORTINGLOBE.NS",
@@ -7165,6 +7213,10 @@
       "name": "Quint Digital Limited"
     },
     {
+      "ticker": "QUINTEGRA.NS",
+      "name": "Quintegra Solutions Limited"
+    },
+    {
       "ticker": "RACE.NS",
       "name": "Race Eco Chain Limited"
     },
@@ -7235,6 +7287,10 @@
     {
       "ticker": "RAJTV.NS",
       "name": "Raj Television Network Limited"
+    },
+    {
+      "ticker": "RAJVIR.NS",
+      "name": "Rajvir Industries Limited"
     },
     {
       "ticker": "RALLIS.NS",
@@ -8365,6 +8421,10 @@
       "name": "SKF India (Industrial) Limited"
     },
     {
+      "ticker": "SKIL.NS",
+      "name": "SKIL Infrastructure Limited"
+    },
+    {
       "ticker": "SKIPPER.NS",
       "name": "Skipper Limited"
     },
@@ -9089,6 +9149,10 @@
       "name": "Tembo Global Industries Limited"
     },
     {
+      "ticker": "TEMPSENS.NS",
+      "name": "Tempsens Instruments (India) Limited"
+    },
+    {
       "ticker": "TENNIND.NS",
       "name": "Tenneco Clean Air India Limited"
     },
@@ -9543,6 +9607,10 @@
     {
       "ticker": "UNITEDTEA.NS",
       "name": "The United Nilgiri Tea Estates Company Limited"
+    },
+    {
+      "ticker": "UNIVAFOODS.NS",
+      "name": "Univa Foods Limited"
     },
     {
       "ticker": "UNIVASTU.NS",
@@ -10229,5 +10297,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2557
+  "count": 2574
 }
