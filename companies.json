@@ -605,6 +605,10 @@
       "name": "Annapurna Swadisht Limited"
     },
     {
+      "ticker": "ANNU.NS",
+      "name": "Annu Projects Limited"
+    },
+    {
       "ticker": "ANSALAPI.NS",
       "name": "Ansal Properties & Infrastructure Limited"
     },
@@ -2413,10 +2417,6 @@
       "name": "Digjam Limited"
     },
     {
-      "ticker": "DIL.NS",
-      "name": "Debock Industries Limited"
-    },
-    {
       "ticker": "DISAQ.NS",
       "name": "Disa India Limited"
     },
@@ -2535,6 +2535,10 @@
     {
       "ticker": "DUCON.NS",
       "name": "Ducon Infratechnologies Limited"
+    },
+    {
+      "ticker": "DUCON-RE1.NS",
+      "name": "Ducon Infratech Ltd-RE"
     },
     {
       "ticker": "DVL.NS",
@@ -2809,6 +2813,10 @@
       "name": "Escorts Kubota Limited"
     },
     {
+      "ticker": "ESDS.NS",
+      "name": "ESDS Software Solution Limited"
+    },
+    {
       "ticker": "ESSARSHPNG.NS",
       "name": "Essar Shipping Limited"
     },
@@ -2895,10 +2903,6 @@
     {
       "ticker": "FCL.NS",
       "name": "Fineotex Chemical Limited"
-    },
-    {
-      "ticker": "FCONSUMER.NS",
-      "name": "Future Consumer Limited"
     },
     {
       "ticker": "FCSSOFT.NS",
@@ -3921,6 +3925,10 @@
       "name": "Himadri Speciality Chemical Limited"
     },
     {
+      "ticker": "HTEL.NS",
+      "name": "Hy-Tech Engineers Limited"
+    },
+    {
       "ticker": "HTMEDIA.NS",
       "name": "HT Media Limited"
     },
@@ -4461,6 +4469,10 @@
       "name": "Jaykay Enterprises Limited"
     },
     {
+      "ticker": "JAYKAY-RE1.NS",
+      "name": "Jaykay Enterprises Limited-RE"
+    },
+    {
       "ticker": "JAYNECOIND.NS",
       "name": "Jayaswal Neco Industries Limited"
     },
@@ -4789,6 +4801,10 @@
       "name": "KDDL Limited"
     },
     {
+      "ticker": "KDGREEN.NS",
+      "name": "KD Green Industries Limited"
+    },
+    {
       "ticker": "KEC.NS",
       "name": "KEC International Limited"
     },
@@ -5077,10 +5093,6 @@
       "name": "KSH International Limited"
     },
     {
-      "ticker": "KSHITIJ-RE.NS",
-      "name": "Kshitij Polyline Ltd-RE"
-    },
-    {
       "ticker": "KSHITIJPOL.NS",
       "name": "Kshitij Polyline Limited"
     },
@@ -5365,6 +5377,10 @@
       "name": "Lumax Auto Technologies Limited"
     },
     {
+      "ticker": "LUMINO.NS",
+      "name": "Lumino Industries Limited"
+    },
+    {
       "ticker": "LUPIN.NS",
       "name": "Lupin Limited"
     },
@@ -5513,10 +5529,6 @@
       "name": "Manba Finance Limited"
     },
     {
-      "ticker": "MANBRO.NS",
-      "name": "Manbro Industries Limited"
-    },
-    {
       "ticker": "MANCREDIT.NS",
       "name": "Mangal Credit and Fincorp Limited"
     },
@@ -5651,6 +5663,10 @@
     {
       "ticker": "MBAPL.NS",
       "name": "Madhya Bharat Agro Products Limited"
+    },
+    {
+      "ticker": "MBECL.NS",
+      "name": "Mcnally Bharat Engineering Company Limited"
     },
     {
       "ticker": "MBEL.NS",
@@ -6801,6 +6817,10 @@
       "name": "Permanent Magnets Limited"
     },
     {
+      "ticker": "PERNIASPOP.NS",
+      "name": "Purple Style Labs Limited"
+    },
+    {
       "ticker": "PERSISTENT.NS",
       "name": "Persistent Systems Limited"
     },
@@ -7099,6 +7119,10 @@
     {
       "ticker": "PRINCEPIPE.NS",
       "name": "Prince Pipes And Fittings Limited"
+    },
+    {
+      "ticker": "PRIORITY.NS",
+      "name": "Priority Jewels Limited"
     },
     {
       "ticker": "PRISMX.NS",
@@ -8437,6 +8461,10 @@
       "name": "SKY GOLD AND DIAMONDS LIMITED"
     },
     {
+      "ticker": "SKYWAYS.NS",
+      "name": "Skyways Air Services Limited"
+    },
+    {
       "ticker": "SMARTLINK.NS",
       "name": "Smartlink Holdings Limited"
     },
@@ -8951,6 +8979,10 @@
     {
       "ticker": "SWSOLAR.NS",
       "name": "Sterling and Wilson Renewable Energy Limited"
+    },
+    {
+      "ticker": "SYMBIOTEC.NS",
+      "name": "Symbiotec Pharmalab Limited"
     },
     {
       "ticker": "SYMPHONY.NS",
@@ -9817,6 +9849,10 @@
       "name": "Viceroy Hotels Limited"
     },
     {
+      "ticker": "VHLTD-RE1.NS",
+      "name": "Viceroy Hotels Ltd-RE"
+    },
+    {
       "ticker": "VIDHIING.NS",
       "name": "Vidhi Specialty Food Ingredients Limited"
     },
@@ -10297,5 +10333,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2574
+  "count": 2583
 }
