@@ -637,6 +637,9 @@
   .fin-table td { font-family: 'IBM Plex Mono', monospace; color: var(--text); }
   .fin-table td.cell-up { color: var(--gain); }
   .fin-table td.cell-down { color: var(--loss); }
+  .fin-row-alt { background: rgba(255,255,255,0.02); }
+  .fin-row-total td { font-weight: 700; color: var(--text); border-top: 1.5px solid var(--border); }
+  .basis-btn.active { background: var(--accent); border-color: var(--accent); color: #17130A; font-weight: 600; }
   .fin-section-label {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
@@ -864,6 +867,24 @@
   }
   .ratio-item .value.na { color: var(--neutral); font-weight: 400; }
 
+  .tech-header-right { display: flex; align-items: center; gap: 8px; }
+  .tech-info-btn {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 1px solid var(--border); background: var(--panel-alt);
+    color: var(--text-dim); font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; font-weight: 600; cursor: pointer; line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0; padding: 0;
+  }
+  .tech-info-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .tech-info-box {
+    border: 1px solid var(--border); border-radius: 8px; background: var(--panel-alt);
+    padding: 14px 16px; margin: 0 0 16px; font-size: 12px; color: var(--text-dim); line-height: 1.6;
+  }
+  .tech-info-box dt { color: var(--text); font-weight: 600; margin-top: 10px; }
+  .tech-info-box dt:first-child { margin-top: 0; }
+  .tech-info-box dd { margin: 2px 0 0; }
+
   .tech-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -922,7 +943,16 @@
     margin-bottom: 4px;
   }
 
-  #macd-svg { width: 100%; height: 130px; display: block; }
+  .tech-chart-label {
+    font-size: 11px; color: var(--text-dim); text-transform: uppercase;
+    letter-spacing: 0.04em; margin: 18px 0 6px;
+  }
+  .tech-chart-label:first-of-type { margin-top: 4px; }
+  .tech-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: var(--text-dim); margin-bottom: 6px; }
+  .tech-legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .tech-legend .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+  #macd-svg, #adx-svg { width: 100%; height: 190px; display: block; cursor: crosshair; }
   #tech-empty { color: var(--text-dim); font-size: 13px; text-align: center; padding: 30px 0; }
 
   .placeholder-panel {
@@ -1039,11 +1069,49 @@
     <div class="panel" id="technicals-panel" style="margin-bottom:20px;">
       <div class="panel-title">
         <span>Technicals</span>
-        <span style="font-size:10px; color:var(--text-dim); font-weight:400; text-transform:none; letter-spacing:0;">MACD · RSI(14) · ADX(14), computed from 1Y daily closes</span>
+        <div class="tech-header-right">
+          <span style="font-size:10px; color:var(--text-dim); font-weight:400; text-transform:none; letter-spacing:0;">Computed from 1Y daily closes</span>
+          <button class="tech-info-btn" id="tech-info-btn" type="button" aria-label="About these indicators">i</button>
+        </div>
       </div>
+
+      <div class="tech-info-box" id="tech-info-box" style="display:none;">
+        <dl>
+          <dt>MACD line</dt>
+          <dd>12-day EMA minus 26-day EMA of the closing price. Positive means short-term momentum is running above the longer-term trend — a bullish tilt.</dd>
+          <dt>Signal line</dt>
+          <dd>A 9-day EMA of the MACD line itself. When MACD crosses above/below this line, it's read as a buy/sell trigger.</dd>
+          <dt>Histogram</dt>
+          <dd>MACD line minus signal line. Green bars above zero = bullish momentum, red bars below zero = bearish. Shrinking bars often show up before an actual crossover.</dd>
+          <dt>RSI (14)</dt>
+          <dd>A 0–100 momentum oscillator. Above 70 suggests overbought (risk of a pullback), below 30 suggests oversold (risk of a bounce).</dd>
+          <dt>ADX (14)</dt>
+          <dd>Measures how strong a trend is, 0–100, regardless of direction. Above 25 means a real trend is in place; below 20 is a choppy, range-bound market where crossovers are less reliable.</dd>
+          <dt>+DI / −DI</dt>
+          <dd>The directional indicators ADX is built from. +DI above −DI points to an uptrend; −DI above +DI points to a downtrend. Paired with ADX &gt; 25, this gives both trend direction and strength.</dd>
+        </dl>
+      </div>
+
       <div id="tech-signal-badge"></div>
       <div class="tech-grid" id="tech-grid"></div>
-      <svg id="macd-svg" viewBox="0 0 800 130" preserveAspectRatio="xMidYMid meet"></svg>
+
+      <div class="tech-chart-label">MACD, signal &amp; histogram (90d)</div>
+      <div class="tech-legend">
+        <span><span class="dot" style="background:#4C8DFF;"></span>MACD line</span>
+        <span><span class="dot" style="background:var(--accent);"></span>Signal line</span>
+        <span><span class="dot" style="background:var(--gain);"></span>Histogram (+)</span>
+        <span><span class="dot" style="background:var(--loss);"></span>Histogram (−)</span>
+      </div>
+      <svg id="macd-svg" viewBox="0 0 800 190" preserveAspectRatio="xMidYMid meet"></svg>
+
+      <div class="tech-chart-label">ADX &amp; directional index (90d)</div>
+      <div class="tech-legend">
+        <span><span class="dot" style="background:var(--text);"></span>ADX</span>
+        <span><span class="dot" style="background:var(--gain);"></span>+DI</span>
+        <span><span class="dot" style="background:var(--loss);"></span>−DI</span>
+      </div>
+      <svg id="adx-svg" viewBox="0 0 800 190" preserveAspectRatio="xMidYMid meet"></svg>
+
       <div id="tech-empty" style="display:none;">Not enough price history to compute indicators.</div>
     </div>
 
@@ -1059,6 +1127,8 @@
       <div class="ph-title-row">
         <div class="ph-title">Financials</div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <button class="compare-toggle-btn basis-btn active" id="basis-consolidated-btn">Consolidated</button>
+          <button class="compare-toggle-btn basis-btn" id="basis-standalone-btn">Standalone</button>
           <button class="compare-toggle-btn" id="yoy-toggle-btn">YoY</button>
           <button class="compare-toggle-btn" id="qoq-toggle-btn">QoQ</button>
           <button class="upload-trigger" data-open-upload-modal>UPLOAD FILES</button>
@@ -1206,6 +1276,16 @@
       <label class="radio-pill"><input type="radio" name="analyze-type" value="both" checked /> Both</label>
       <label class="radio-pill"><input type="radio" name="analyze-type" value="financials" /> Financials only</label>
       <label class="radio-pill"><input type="radio" name="analyze-type" value="audit" /> Audit Report only</label>
+    </div>
+
+    <div class="field-group" id="statement-select-group" style="margin-bottom:18px;">
+      <label>Which statement(s)? (lets you re-run just one to save tokens)</label>
+      <select id="statement-select">
+        <option value="all">All (Balance Sheet + P&amp;L + Cash Flow)</option>
+        <option value="balance_sheet">Balance Sheet only</option>
+        <option value="profit_and_loss">Profit &amp; Loss only</option>
+        <option value="cash_flow">Cash Flow only</option>
+      </select>
     </div>
 
     <div class="analyze-two-col">
@@ -1460,10 +1540,14 @@ function renderRatios() {
 }
 
 /* ============================================================
-   TECHNICALS — MACD, RSI(14), ADX(14), computed client-side from
-   the same 1Y daily price rows the API already serves. No extra
-   backend or API key needed.
+   TECHNICALS — MACD, RSI(14), ADX(14)+DI, computed client-side
+   from the same 1Y daily price rows the API already serves.
    ============================================================ */
+
+document.getElementById("tech-info-btn").addEventListener("click", function () {
+  const box = document.getElementById("tech-info-box");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+});
 
 function computeEMA(values, period) {
   const k = 2 / (period + 1);
@@ -1565,12 +1649,14 @@ function computeADX(highs, lows, closes, period) {
 async function loadTechnicals() {
   const badge = document.getElementById("tech-signal-badge");
   const grid = document.getElementById("tech-grid");
-  const svg = document.getElementById("macd-svg");
+  const macdSvg = document.getElementById("macd-svg");
+  const adxSvg = document.getElementById("adx-svg");
   const emptyEl = document.getElementById("tech-empty");
 
   badge.innerHTML = '<span style="color:var(--text-dim); font-size:13px;">Loading indicators…</span>';
   grid.innerHTML = "";
-  svg.style.display = "none";
+  macdSvg.style.display = "none";
+  adxSvg.style.display = "none";
   emptyEl.style.display = "none";
 
   try {
@@ -1672,53 +1758,246 @@ function renderTechnicals(rows) {
   });
 
   document.getElementById("macd-svg").style.display = "block";
+  document.getElementById("adx-svg").style.display = "block";
   document.getElementById("tech-empty").style.display = "none";
-  drawMacdSvg(macd.macdLine, macd.signalLine, macd.histogram);
+  drawMacdSvg(rows, macd.macdLine, macd.signalLine, macd.histogram);
+  drawAdxSvg(rows, adxData.adx, adxData.plusDI, adxData.minusDI);
 }
 
-function drawMacdSvg(macdLine, signalLine, histogram) {
+let macdChartLayout = null;
+let adxChartLayout = null;
+
+function drawMacdSvg(rows, macdLine, signalLine, histogram) {
   const svg = document.getElementById("macd-svg");
-  const W = 800, H = 130, PAD = 10;
+  const W = 800, H = 190;
+  const marginLeft = 52, marginRight = 14, marginTop = 14, marginBottom = 26;
+  const plotW = W - marginLeft - marginRight;
+  const plotH = H - marginTop - marginBottom;
+
   const n = macdLine.length;
   const windowSize = Math.min(90, n);
   const start = n - windowSize;
   const m = macdLine.slice(start);
   const s = signalLine.slice(start);
   const h = histogram.slice(start);
+  const dates = rows.slice(start).map(getRowDate);
 
-  const allVals = m.concat(s).filter(function (v) { return v !== null && !Number.isNaN(v); }).map(Math.abs);
+  const allVals = m.concat(s).concat(h).filter(function (v) { return v !== null && !Number.isNaN(v); }).map(Math.abs);
   const maxAbs = Math.max.apply(null, allVals.concat([0.01]));
 
-  function yFor(v) { return H / 2 - (v / maxAbs) * (H / 2 - PAD); }
-  function xFor(i) { return PAD + (i / (windowSize - 1)) * (W - PAD * 2); }
+  function xForIndex(i) { return marginLeft + (i / (windowSize - 1)) * plotW; }
+  function yForVal(v) { return marginTop + plotH / 2 - (v / maxAbs) * (plotH / 2 - 6); }
 
-  const barW = Math.max(((W - PAD * 2) / windowSize) * 0.7, 1);
+  const yTickVals = [maxAbs, maxAbs / 2, 0, -maxAbs / 2, -maxAbs];
+  let yTicksSvg = "";
+  yTickVals.forEach(function (val) {
+    const y = yForVal(val);
+    yTicksSvg += '<line class="grid-line" x1="' + marginLeft + '" y1="' + y + '" x2="' + (W - marginRight) + '" y2="' + y + '" />' +
+      '<text class="axis-label" x="' + (marginLeft - 8) + '" y="' + (y + 3) + '" text-anchor="end">' + fmtNumber(val, 2) + '</text>';
+  });
+
+  const xTickCount = Math.min(6, windowSize);
+  let xTicksSvg = "";
+  for (let t = 0; t < xTickCount; t++) {
+    const idx = Math.round((t / (xTickCount - 1)) * (windowSize - 1));
+    const x = xForIndex(idx);
+    xTicksSvg += '<text class="axis-label" x="' + x + '" y="' + (H - marginBottom + 16) + '" text-anchor="middle">' + formatAxisDate(dates[idx], "3mo") + '</text>';
+  }
+
+  const barW = Math.max((plotW / windowSize) * 0.7, 1);
   let barsHtml = "";
   h.forEach(function (v, i) {
     if (v === null || Number.isNaN(v)) return;
-    const yZero = H / 2;
-    const yVal = yFor(v);
+    const yZero = yForVal(0);
+    const yVal = yForVal(v);
     const y = Math.min(yZero, yVal);
     const barH = Math.max(Math.abs(yVal - yZero), 1);
     const color = v >= 0 ? "var(--gain)" : "var(--loss)";
-    barsHtml += '<rect x="' + (xFor(i) - barW / 2) + '" y="' + y + '" width="' + barW + '" height="' + barH + '" fill="' + color + '" opacity="0.55" />';
+    barsHtml += '<rect x="' + (xForIndex(i) - barW / 2) + '" y="' + y + '" width="' + barW + '" height="' + barH + '" fill="' + color + '" opacity="0.55" />';
   });
 
   function pathFor(arr, color) {
     let d = "";
     arr.forEach(function (v, i) {
       if (v === null || Number.isNaN(v)) return;
-      d += (d ? "L" : "M") + xFor(i) + "," + yFor(v) + " ";
+      d += (d ? "L" : "M") + xForIndex(i) + "," + yForVal(v) + " ";
     });
     return '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="1.5" />';
   }
 
   svg.innerHTML =
-    '<line x1="' + PAD + '" y1="' + (H / 2) + '" x2="' + (W - PAD) + '" y2="' + (H / 2) + '" class="axis-line" />' +
+    yTicksSvg +
+    '<line class="axis-line" x1="' + marginLeft + '" y1="' + marginTop + '" x2="' + marginLeft + '" y2="' + (marginTop + plotH) + '" />' +
+    '<line class="axis-line" x1="' + marginLeft + '" y1="' + (marginTop + plotH) + '" x2="' + (W - marginRight) + '" y2="' + (marginTop + plotH) + '" />' +
+    xTicksSvg +
     barsHtml +
     pathFor(m, "#4C8DFF") +
-    pathFor(s, "var(--accent)");
+    pathFor(s, "var(--accent)") +
+    '<line class="crosshair-line" id="macd-svg-crosshair-v" x1="0" y1="' + marginTop + '" x2="0" y2="' + (marginTop + plotH) + '" />' +
+    '<circle class="crosshair-dot" id="macd-svg-dot-macd" r="3.5" fill="#4C8DFF" stroke="#0B0E11" stroke-width="1.5" />' +
+    '<circle class="crosshair-dot" id="macd-svg-dot-signal" r="3.5" fill="var(--accent)" stroke="#0B0E11" stroke-width="1.5" />' +
+    '<rect class="crosshair-tooltip-bg" id="macd-svg-tooltip-bg" rx="5" />' +
+    '<text class="crosshair-tooltip-text" id="macd-svg-tooltip-text" x="0" y="0"></text>';
+
+  macdChartLayout = {
+    w: W, h: H, marginLeft: marginLeft, marginRight: marginRight, marginTop: marginTop, plotW: plotW, plotH: plotH,
+    n: windowSize, dates: dates, xForIndex: xForIndex, yForVal: yForVal,
+    series: [
+      { key: "macd", name: "MACD", values: m },
+      { key: "signal", name: "Signal", values: s },
+      { key: "hist", name: "Histogram", values: h }
+    ]
+  };
 }
+
+function drawAdxSvg(rows, adxArr, plusDI, minusDI) {
+  const svg = document.getElementById("adx-svg");
+  const W = 800, H = 190;
+  const marginLeft = 52, marginRight = 14, marginTop = 14, marginBottom = 26;
+  const plotW = W - marginLeft - marginRight;
+  const plotH = H - marginTop - marginBottom;
+
+  const n = adxArr.length;
+  const windowSize = Math.min(90, n);
+  const start = n - windowSize;
+  const a = adxArr.slice(start);
+  const pdi = plusDI.slice(start);
+  const mdi = minusDI.slice(start);
+  const dates = rows.slice(start).map(getRowDate);
+
+  const allVals = a.concat(pdi).concat(mdi).filter(function (v) { return v !== null && !Number.isNaN(v); });
+  const dynMax = Math.max.apply(null, allVals.concat([30]));
+  const topVal = Math.ceil(dynMax / 10) * 10;
+
+  function xForIndex(i) { return marginLeft + (i / (windowSize - 1)) * plotW; }
+  function yForVal(v) { return marginTop + plotH - (v / topVal) * plotH; }
+
+  const yTickCount = 4;
+  let yTicksSvg = "";
+  for (let t = 0; t <= yTickCount; t++) {
+    const val = topVal * t / yTickCount;
+    const y = yForVal(val);
+    yTicksSvg += '<line class="grid-line" x1="' + marginLeft + '" y1="' + y + '" x2="' + (W - marginRight) + '" y2="' + y + '" />' +
+      '<text class="axis-label" x="' + (marginLeft - 8) + '" y="' + (y + 3) + '" text-anchor="end">' + fmtNumber(val, 0) + '</text>';
+  }
+
+  const xTickCount = Math.min(6, windowSize);
+  let xTicksSvg = "";
+  for (let t = 0; t < xTickCount; t++) {
+    const idx = Math.round((t / (xTickCount - 1)) * (windowSize - 1));
+    const x = xForIndex(idx);
+    xTicksSvg += '<text class="axis-label" x="' + x + '" y="' + (H - marginBottom + 16) + '" text-anchor="middle">' + formatAxisDate(dates[idx], "3mo") + '</text>';
+  }
+
+  function pathFor(arr, color) {
+    let d = "";
+    arr.forEach(function (v, i) {
+      if (v === null || Number.isNaN(v)) return;
+      d += (d ? "L" : "M") + xForIndex(i) + "," + yForVal(v) + " ";
+    });
+    return '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="1.5" />';
+  }
+
+  const thresholdY = yForVal(25);
+
+  svg.innerHTML =
+    yTicksSvg +
+    '<line class="axis-line" x1="' + marginLeft + '" y1="' + marginTop + '" x2="' + marginLeft + '" y2="' + (marginTop + plotH) + '" />' +
+    '<line class="axis-line" x1="' + marginLeft + '" y1="' + (marginTop + plotH) + '" x2="' + (W - marginRight) + '" y2="' + (marginTop + plotH) + '" />' +
+    xTicksSvg +
+    '<line x1="' + marginLeft + '" y1="' + thresholdY + '" x2="' + (W - marginRight) + '" y2="' + thresholdY + '" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="3,3" />' +
+    '<text class="axis-label" x="' + (W - marginRight) + '" y="' + (thresholdY - 4) + '" text-anchor="end" fill="var(--text-dim)">trend threshold 25</text>' +
+    pathFor(a, "var(--text)") +
+    pathFor(pdi, "var(--gain)") +
+    pathFor(mdi, "var(--loss)") +
+    '<line class="crosshair-line" id="adx-svg-crosshair-v" x1="0" y1="' + marginTop + '" x2="0" y2="' + (marginTop + plotH) + '" />' +
+    '<circle class="crosshair-dot" id="adx-svg-dot-adx" r="3.5" fill="var(--text)" stroke="#0B0E11" stroke-width="1.5" />' +
+    '<circle class="crosshair-dot" id="adx-svg-dot-plusdi" r="3.5" fill="var(--gain)" stroke="#0B0E11" stroke-width="1.5" />' +
+    '<circle class="crosshair-dot" id="adx-svg-dot-minusdi" r="3.5" fill="var(--loss)" stroke="#0B0E11" stroke-width="1.5" />' +
+    '<rect class="crosshair-tooltip-bg" id="adx-svg-tooltip-bg" rx="5" />' +
+    '<text class="crosshair-tooltip-text" id="adx-svg-tooltip-text" x="0" y="0"></text>';
+
+  adxChartLayout = {
+    w: W, h: H, marginLeft: marginLeft, marginRight: marginRight, marginTop: marginTop, plotW: plotW, plotH: plotH,
+    n: windowSize, dates: dates, xForIndex: xForIndex, yForVal: yForVal,
+    series: [
+      { key: "adx", name: "ADX", values: a },
+      { key: "plusdi", name: "+DI", values: pdi },
+      { key: "minusdi", name: "-DI", values: mdi }
+    ]
+  };
+}
+
+function handleIndicatorMouseMove(evt, svgId, layoutGetter) {
+  const layout = layoutGetter();
+  if (!layout) return;
+  const svg = document.getElementById(svgId);
+  const rect = svg.getBoundingClientRect();
+  const scaleX = layout.w / rect.width;
+  const mouseXInSvg = (evt.clientX - rect.left) * scaleX;
+
+  const relX = Math.min(Math.max(mouseXInSvg - layout.marginLeft, 0), layout.plotW);
+  const fraction = relX / layout.plotW;
+  const idx = Math.round(fraction * (layout.n - 1));
+  const clampedIdx = Math.min(Math.max(idx, 0), layout.n - 1);
+
+  const x = layout.xForIndex(clampedIdx);
+  const dateLabel = formatAxisDate(layout.dates[clampedIdx], "3mo");
+
+  const vLine = document.getElementById(svgId + "-crosshair-v");
+  if (!vLine) return;
+  vLine.setAttribute("x1", x); vLine.setAttribute("x2", x); vLine.style.display = "block";
+
+  const lines = [dateLabel];
+  layout.series.forEach(function (s) {
+    const v = s.values[clampedIdx];
+    const dot = document.getElementById(svgId + "-dot-" + s.key);
+    if (v !== null && v !== undefined && !Number.isNaN(v)) {
+      lines.push(s.name + ": " + fmtNumber(v, 2));
+      if (dot) { dot.setAttribute("cx", x); dot.setAttribute("cy", layout.yForVal(v)); dot.style.display = "block"; }
+    } else if (dot) {
+      dot.style.display = "none";
+    }
+  });
+
+  const bg = document.getElementById(svgId + "-tooltip-bg");
+  const textEl = document.getElementById(svgId + "-tooltip-text");
+  const boxW = 138;
+  const boxH = 10 + lines.length * 14;
+  let bgX = x + 10;
+  if (bgX + boxW > layout.w - layout.marginRight) bgX = x - boxW - 10;
+  const bgY = layout.marginTop;
+
+  bg.setAttribute("x", bgX); bg.setAttribute("y", bgY);
+  bg.setAttribute("width", boxW); bg.setAttribute("height", boxH);
+  bg.style.display = "block";
+
+  textEl.style.display = "block";
+  textEl.innerHTML = lines.map(function (line, i) {
+    return '<tspan x="' + (bgX + 8) + '" y="' + (bgY + 15 + i * 14) + '">' + line + '</tspan>';
+  }).join("");
+}
+
+function handleIndicatorMouseLeave(svgId, layoutGetter) {
+  const layout = layoutGetter();
+  const vLine = document.getElementById(svgId + "-crosshair-v");
+  if (vLine) vLine.style.display = "none";
+  const bg = document.getElementById(svgId + "-tooltip-bg");
+  if (bg) bg.style.display = "none";
+  const textEl = document.getElementById(svgId + "-tooltip-text");
+  if (textEl) textEl.style.display = "none";
+  if (layout) {
+    layout.series.forEach(function (s) {
+      const dot = document.getElementById(svgId + "-dot-" + s.key);
+      if (dot) dot.style.display = "none";
+    });
+  }
+}
+
+document.getElementById("macd-svg").addEventListener("mousemove", function (e) { handleIndicatorMouseMove(e, "macd-svg", function () { return macdChartLayout; }); });
+document.getElementById("macd-svg").addEventListener("mouseleave", function () { handleIndicatorMouseLeave("macd-svg", function () { return macdChartLayout; }); });
+document.getElementById("adx-svg").addEventListener("mousemove", function (e) { handleIndicatorMouseMove(e, "adx-svg", function () { return adxChartLayout; }); });
+document.getElementById("adx-svg").addEventListener("mouseleave", function () { handleIndicatorMouseLeave("adx-svg", function () { return adxChartLayout; }); });
 
 function renderRangeButtons() {
   const container = document.getElementById("range-buttons");
@@ -2479,10 +2758,19 @@ document.getElementById("period-select-all").addEventListener("click", function 
   boxes.forEach(function (cb) { cb.checked = !allChecked; });
 });
 
+function updateStatementSelectVisibility() {
+  const analyzeType = document.querySelector('input[name="analyze-type"]:checked').value;
+  document.getElementById("statement-select-group").style.display = analyzeType === "audit" ? "none" : "block";
+}
+document.querySelectorAll('input[name="analyze-type"]').forEach(function (radio) {
+  radio.addEventListener("change", updateStatementSelectVisibility);
+});
+
 function renderAnalyzeModal() {
   analysisResultsEl.innerHTML = "";
   analysisProgressEl.textContent = "";
   document.getElementById("progress-bar-track").style.display = "none";
+  updateStatementSelectVisibility();
 
   const connections = getAIConnections();
   analyzeAiListEl.innerHTML = "";
@@ -2655,11 +2943,15 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
   const bundlePromises = selectedBundleIds.map(function (id) { return getBundle(id); });
 
   Promise.all(bundlePromises).then(function (bundles) {
-    const STATEMENTS = [
+    const ALL_STATEMENTS = [
       ["balance_sheet", "Balance Sheet"],
       ["profit_and_loss", "Profit and Loss"],
       ["cash_flow", "Cash Flow"],
     ];
+    const statementChoice = document.getElementById("statement-select").value;
+    const STATEMENTS = statementChoice === "all"
+      ? ALL_STATEMENTS
+      : ALL_STATEMENTS.filter(function (s) { return s[0] === statementChoice; });
 
     let tasks = [];
     bundles.forEach(function (bundle) {
@@ -2705,7 +2997,7 @@ document.getElementById("run-analysis-btn").addEventListener("click", function (
 
         let maxTokens = 1500;
         if (task.kind === "financials") {
-          maxTokens = task.statementKey === "profit_and_loss" ? 7000 : 3000;
+          maxTokens = task.statementKey === "profit_and_loss" ? 3000 : 2000;
         }
         return callAI(conn, prompt, maxTokens).then(function (responseText) {
           const parsed = tryParseJSON(responseText);
@@ -2838,8 +3130,22 @@ function flattenValue(val) {
 /* ===== Financials table rendering ===== */
 let yoyActive = false;
 let qoqActive = false;
+let basisMode = "consolidated";
 let selectedFinConnId = null;
 let selectedAuditConnId = null;
+
+document.getElementById("basis-consolidated-btn").addEventListener("click", function () {
+  basisMode = "consolidated";
+  document.getElementById("basis-consolidated-btn").classList.add("active");
+  document.getElementById("basis-standalone-btn").classList.remove("active");
+  renderFinancialsSection();
+});
+document.getElementById("basis-standalone-btn").addEventListener("click", function () {
+  basisMode = "standalone";
+  document.getElementById("basis-standalone-btn").classList.add("active");
+  document.getElementById("basis-consolidated-btn").classList.remove("active");
+  renderFinancialsSection();
+});
 
 document.getElementById("yoy-toggle-btn").addEventListener("click", function () {
   yoyActive = !yoyActive;
@@ -2910,6 +3216,15 @@ function renderFinancialsSection() {
     const sections = [["balance_sheet", "Balance Sheet"], ["profit_and_loss", "Profit &amp; Loss"], ["cash_flow", "Cash Flow"]];
     let html = "";
 
+    function basisOfKey(k) {
+      if (/\(Standalone\)\s*$/i.test(k)) return "standalone";
+      if (/\(Consolidated\)\s*$/i.test(k)) return "consolidated";
+      return "neutral";
+    }
+    function stripBasisSuffix(k) {
+      return k.replace(/\s*\(Standalone\)\s*$/i, "").replace(/\s*\(Consolidated\)\s*$/i, "");
+    }
+
     sections.forEach(function (sec) {
       const key = sec[0], label = sec[1];
       const allKeys = {};
@@ -2917,7 +3232,10 @@ function renderFinancialsSection() {
         const obj = p.data[key] || {};
         Object.keys(obj).forEach(function (k) { allKeys[k] = true; });
       });
-      const rowKeys = Object.keys(allKeys);
+      const rowKeys = Object.keys(allKeys).filter(function (k) {
+        const basis = basisOfKey(k);
+        return basis === "neutral" || basis === basisMode;
+      });
       if (rowKeys.length === 0) return;
 
       html += '<div class="fin-section-label">' + label + '</div>';
@@ -2925,8 +3243,10 @@ function renderFinancialsSection() {
       periodsData.forEach(function (p) { html += "<th>" + p.bundle.periodLabel + "</th>"; });
       html += "</tr></thead><tbody>";
 
-      rowKeys.forEach(function (rowKey) {
-        html += "<tr><td>" + rowKey + "</td>";
+      rowKeys.forEach(function (rowKey, rowIdx) {
+        const isTotalRow = /total|net profit|net loss|profit before tax|profit\/\s*\(loss\)/i.test(rowKey);
+        const rowClass = (isTotalRow ? "fin-row-total " : "") + (rowIdx % 2 === 1 ? "fin-row-alt" : "");
+        html += '<tr class="' + rowClass + '"><td>' + stripBasisSuffix(rowKey) + "</td>";
         periodsData.forEach(function (p) {
           const val = p.data[key] ? p.data[key][rowKey] : undefined;
           const displayVal = flattenValue(val);
@@ -2954,7 +3274,7 @@ function renderFinancialsSection() {
       html += "</tbody></table></div>";
     });
 
-    container.innerHTML = html || "<p style=\"color:var(--text-dim);font-size:13px;\">The AI response did not contain recognizable financial statement data.</p>";
+    container.innerHTML = html || "<p style=\"color:var(--text-dim);font-size:13px;\">No " + basisMode + " figures found — try switching the Standalone/Consolidated toggle.</p>";
   });
 }
 
