@@ -1333,10 +1333,6 @@
       "name": "BF Utilities Limited"
     },
     {
-      "ticker": "BGLOBAL.NS",
-      "name": "Bharatiya Global Infomedia Limited"
-    },
-    {
       "ticker": "BGRENERGY.NS",
       "name": "BGR Energy Systems Limited"
     },
@@ -1483,10 +1479,6 @@
     {
       "ticker": "BLSE.NS",
       "name": "BLS E-Services Limited"
-    },
-    {
-      "ticker": "BLUECHIP.NS",
-      "name": "Blue Chip India Limited"
     },
     {
       "ticker": "BLUECLOUDS.NS",
@@ -1801,10 +1793,6 @@
       "name": "Cera Sanitaryware Limited"
     },
     {
-      "ticker": "CEREBRAINT.NS",
-      "name": "Cerebra Integrated Technologies Limited"
-    },
-    {
       "ticker": "CESC.NS",
       "name": "CESC Limited"
     },
@@ -1901,10 +1889,6 @@
       "name": "Cipla Limited"
     },
     {
-      "ticker": "CLCIND.NS",
-      "name": "CLC Industries Limited"
-    },
-    {
       "ticker": "CLEAN.NS",
       "name": "Clean Science and Technology Limited"
     },
@@ -1919,10 +1903,6 @@
     {
       "ticker": "CLSEL.NS",
       "name": "Chaman Lal Setia Exports Limited"
-    },
-    {
-      "ticker": "CMICABLES.NS",
-      "name": "CMI Limited"
     },
     {
       "ticker": "CMLL.NS",
@@ -2083,6 +2063,10 @@
     {
       "ticker": "CREST.NS",
       "name": "Crest Ventures Limited"
+    },
+    {
+      "ticker": "CRESTO.NS",
+      "name": "CRESTO TECHNO LIMITED"
     },
     {
       "ticker": "CRISIL.NS",
@@ -2285,6 +2269,10 @@
       "name": "Deep Polymers Limited"
     },
     {
+      "ticker": "DEEPA.NS",
+      "name": "Deepa Jewellers Limited"
+    },
+    {
       "ticker": "DEEPAKFERT.NS",
       "name": "Deepak Fertilizers and Petrochemicals Corporation Limited"
     },
@@ -2473,6 +2461,10 @@
       "name": "Dollar Industries Limited"
     },
     {
+      "ticker": "DOLLEX.NS",
+      "name": "Dollex Agrotech Limited"
+    },
+    {
       "ticker": "DOLPHIN.NS",
       "name": "Dolphin Offshore Enterprises (India) Limited"
     },
@@ -2537,10 +2529,6 @@
       "name": "Ducon Infratechnologies Limited"
     },
     {
-      "ticker": "DUCON-RE1.NS",
-      "name": "Ducon Infratech Ltd-RE"
-    },
-    {
       "ticker": "DVL.NS",
       "name": "Dhunseri Ventures Limited"
     },
@@ -2599,10 +2587,6 @@
     {
       "ticker": "EDELWEISS.NS",
       "name": "Edelweiss Financial Services Limited"
-    },
-    {
-      "ticker": "EDUCOMP.NS",
-      "name": "Educomp Solutions Limited"
     },
     {
       "ticker": "EFCIL.NS",
@@ -5181,10 +5165,6 @@
       "name": "La Opala RG Limited"
     },
     {
-      "ticker": "LASA.NS",
-      "name": "Lasa Supergenerics Limited"
-    },
-    {
       "ticker": "LASERPOWER.NS",
       "name": "Laser Power & Infra Limited"
     },
@@ -5917,6 +5897,10 @@
       "name": "Mold-Tek Packaging Limited"
     },
     {
+      "ticker": "MOMSBELIEF.NS",
+      "name": "Rays of Belief Limited"
+    },
+    {
       "ticker": "MONARCH.NS",
       "name": "Monarch Networth Capital Limited"
     },
@@ -5927,10 +5911,6 @@
     {
       "ticker": "MONTECARLO.NS",
       "name": "Monte Carlo Fashions Limited"
-    },
-    {
-      "ticker": "MORARJEE.NS",
-      "name": "Morarjee Textiles Limited"
     },
     {
       "ticker": "MOREPENLAB.NS",
@@ -6071,10 +6051,6 @@
     {
       "ticker": "NACLIND.NS",
       "name": "NACL Industries Limited"
-    },
-    {
-      "ticker": "NAGAFERT.NS",
-      "name": "Nagarjuna Fertilizers and Chemicals Limited"
     },
     {
       "ticker": "NAGREEKCAP.NS",
@@ -6623,10 +6599,6 @@
     {
       "ticker": "ORKLAINDIA.NS",
       "name": "Orkla India Limited"
-    },
-    {
-      "ticker": "ORTEL.NS",
-      "name": "Ortel Communications Limited"
     },
     {
       "ticker": "ORTINGLOBE.NS",
@@ -7237,10 +7209,6 @@
       "name": "Quint Digital Limited"
     },
     {
-      "ticker": "QUINTEGRA.NS",
-      "name": "Quintegra Solutions Limited"
-    },
-    {
       "ticker": "RACE.NS",
       "name": "Race Eco Chain Limited"
     },
@@ -7311,10 +7279,6 @@
     {
       "ticker": "RAJTV.NS",
       "name": "Raj Television Network Limited"
-    },
-    {
-      "ticker": "RAJVIR.NS",
-      "name": "Rajvir Industries Limited"
     },
     {
       "ticker": "RALLIS.NS",
@@ -8033,10 +7997,6 @@
       "name": "Saint Gobain Sekurit India Limited"
     },
     {
-      "ticker": "SELMC.NS",
-      "name": "SEL Manufacturing Company Limited"
-    },
-    {
       "ticker": "SEMAC.NS",
       "name": "Semac Construction Limited"
     },
@@ -8377,10 +8337,6 @@
       "name": "SIL Investments Limited"
     },
     {
-      "ticker": "SILLYMONKS.NS",
-      "name": "Silly Monks Entertainment Limited"
-    },
-    {
       "ticker": "SILVERTUC.NS",
       "name": "Silver Touch Technologies Limited"
     },
@@ -8443,10 +8399,6 @@
     {
       "ticker": "SKFINDUS.NS",
       "name": "SKF India (Industrial) Limited"
-    },
-    {
-      "ticker": "SKIL.NS",
-      "name": "SKIL Infrastructure Limited"
     },
     {
       "ticker": "SKIPPER.NS",
@@ -8579,10 +8531,6 @@
     {
       "ticker": "SPECTRUM.NS",
       "name": "Spectrum Electrical Industries Limited"
-    },
-    {
-      "ticker": "SPELS.NS",
-      "name": "SPEL Semiconductor Limited"
     },
     {
       "ticker": "SPENCERS.NS",
@@ -9641,10 +9589,6 @@
       "name": "The United Nilgiri Tea Estates Company Limited"
     },
     {
-      "ticker": "UNIVAFOODS.NS",
-      "name": "Univa Foods Limited"
-    },
-    {
       "ticker": "UNIVASTU.NS",
       "name": "Univastu India Limited"
     },
@@ -9847,10 +9791,6 @@
     {
       "ticker": "VHLTD.NS",
       "name": "Viceroy Hotels Limited"
-    },
-    {
-      "ticker": "VHLTD-RE1.NS",
-      "name": "Viceroy Hotels Ltd-RE"
     },
     {
       "ticker": "VIDHIING.NS",
@@ -10333,5 +10273,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2583
+  "count": 2568
 }
