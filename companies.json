@@ -709,6 +709,10 @@
       "name": "Archies Limited"
     },
     {
+      "ticker": "ARCIL.NS",
+      "name": "Asset Reconstruction Company (India) Limited"
+    },
+    {
       "ticker": "ARCL.NS",
       "name": "ARCL Organics Limited"
     },
@@ -1333,6 +1337,10 @@
       "name": "BF Utilities Limited"
     },
     {
+      "ticker": "BGLOBAL.NS",
+      "name": "Bharatiya Global Infomedia Limited"
+    },
+    {
       "ticker": "BGRENERGY.NS",
       "name": "BGR Energy Systems Limited"
     },
@@ -1479,6 +1487,10 @@
     {
       "ticker": "BLSE.NS",
       "name": "BLS E-Services Limited"
+    },
+    {
+      "ticker": "BLUECHIP.NS",
+      "name": "Blue Chip India Limited"
     },
     {
       "ticker": "BLUECLOUDS.NS",
@@ -1793,6 +1805,10 @@
       "name": "Cera Sanitaryware Limited"
     },
     {
+      "ticker": "CEREBRAINT.NS",
+      "name": "Cerebra Integrated Technologies Limited"
+    },
+    {
       "ticker": "CESC.NS",
       "name": "CESC Limited"
     },
@@ -1889,6 +1905,10 @@
       "name": "Cipla Limited"
     },
     {
+      "ticker": "CLCIND.NS",
+      "name": "CLC Industries Limited"
+    },
+    {
       "ticker": "CLEAN.NS",
       "name": "Clean Science and Technology Limited"
     },
@@ -1903,6 +1923,10 @@
     {
       "ticker": "CLSEL.NS",
       "name": "Chaman Lal Setia Exports Limited"
+    },
+    {
+      "ticker": "CMICABLES.NS",
+      "name": "CMI Limited"
     },
     {
       "ticker": "CMLL.NS",
@@ -2589,6 +2613,10 @@
       "name": "Edelweiss Financial Services Limited"
     },
     {
+      "ticker": "EDUCOMP.NS",
+      "name": "Educomp Solutions Limited"
+    },
+    {
       "ticker": "EFCIL.NS",
       "name": "EFC (I) Limited"
     },
@@ -3231,6 +3259,10 @@
     {
       "ticker": "GLAND.NS",
       "name": "Gland Pharma Limited"
+    },
+    {
+      "ticker": "GLASSWALL.NS",
+      "name": "Glass Wall Systems (India) Limited"
     },
     {
       "ticker": "GLAXO.NS",
@@ -4453,10 +4485,6 @@
       "name": "Jaykay Enterprises Limited"
     },
     {
-      "ticker": "JAYKAY-RE1.NS",
-      "name": "Jaykay Enterprises Limited-RE"
-    },
-    {
       "ticker": "JAYNECOIND.NS",
       "name": "Jayaswal Neco Industries Limited"
     },
@@ -4733,6 +4761,10 @@
       "name": "Kanco Tea & Industries Limited"
     },
     {
+      "ticker": "KANOHAR.NS",
+      "name": "Kanohar Electricals Limited"
+    },
+    {
       "ticker": "KANORICHEM.NS",
       "name": "Kanoria Chemicals & Industries Limited"
     },
@@ -4747,6 +4779,10 @@
     {
       "ticker": "KAPSTON.NS",
       "name": "Kapston Services Limited"
+    },
+    {
+      "ticker": "KARAMTARA.NS",
+      "name": "Karamtara Engineering Limited"
     },
     {
       "ticker": "KARMAENG.NS",
@@ -5165,6 +5201,10 @@
       "name": "La Opala RG Limited"
     },
     {
+      "ticker": "LASA.NS",
+      "name": "Lasa Supergenerics Limited"
+    },
+    {
       "ticker": "LASERPOWER.NS",
       "name": "Laser Power & Infra Limited"
     },
@@ -5195,6 +5235,10 @@
     {
       "ticker": "LCCINFOTEC.NS",
       "name": "LCC Infotech Limited"
+    },
+    {
+      "ticker": "LCCPROJECT.NS",
+      "name": "LCC Projects Limited"
     },
     {
       "ticker": "LCL.NS",
@@ -5519,6 +5563,10 @@
     {
       "ticker": "MANGLMCEM.NS",
       "name": "Mangalam Cement Limited"
+    },
+    {
+      "ticker": "MANIKA.NS",
+      "name": "Manika Plastech Limited"
     },
     {
       "ticker": "MANINDS.NS",
@@ -5913,6 +5961,10 @@
       "name": "Monte Carlo Fashions Limited"
     },
     {
+      "ticker": "MORARJEE.NS",
+      "name": "Morarjee Textiles Limited"
+    },
+    {
       "ticker": "MOREPENLAB.NS",
       "name": "Morepen Laboratories Limited"
     },
@@ -5943,6 +5995,10 @@
     {
       "ticker": "MPHASIS.NS",
       "name": "MphasiS Limited"
+    },
+    {
+      "ticker": "MPIMANIPAL.NS",
+      "name": "Manipal Payment and Identity Solutions Limited"
     },
     {
       "ticker": "MPSLTD.NS",
@@ -6051,6 +6107,10 @@
     {
       "ticker": "NACLIND.NS",
       "name": "NACL Industries Limited"
+    },
+    {
+      "ticker": "NAGAFERT.NS",
+      "name": "Nagarjuna Fertilizers and Chemicals Limited"
     },
     {
       "ticker": "NAGREEKCAP.NS",
@@ -6601,6 +6661,10 @@
       "name": "Orkla India Limited"
     },
     {
+      "ticker": "ORTEL.NS",
+      "name": "Ortel Communications Limited"
+    },
+    {
       "ticker": "ORTINGLOBE.NS",
       "name": "ORTIN GLOBAL LIMITED"
     },
@@ -6922,7 +6986,7 @@
     },
     {
       "ticker": "PNC.NS",
-      "name": "Pritish Nandy Communications Limited"
+      "name": "PNC Media and Entertainment Limited"
     },
     {
       "ticker": "PNCINFRA.NS",
@@ -7031,6 +7095,14 @@
     {
       "ticker": "PRAKASHSTL.NS",
       "name": "Prakash Steelage Limited"
+    },
+    {
+      "ticker": "PRANAV.NS",
+      "name": "Pranav Constructions Limited"
+    },
+    {
+      "ticker": "PRASOLCHEM.NS",
+      "name": "Prasol Chemicals Limited"
     },
     {
       "ticker": "PRAVEG.NS",
@@ -7209,6 +7281,10 @@
       "name": "Quint Digital Limited"
     },
     {
+      "ticker": "QUINTEGRA.NS",
+      "name": "Quintegra Solutions Limited"
+    },
+    {
       "ticker": "RACE.NS",
       "name": "Race Eco Chain Limited"
     },
@@ -7279,6 +7355,10 @@
     {
       "ticker": "RAJTV.NS",
       "name": "Raj Television Network Limited"
+    },
+    {
+      "ticker": "RAJVIR.NS",
+      "name": "Rajvir Industries Limited"
     },
     {
       "ticker": "RALLIS.NS",
@@ -7427,6 +7507,10 @@
     {
       "ticker": "REMSONSIND.NS",
       "name": "Remsons Industries Limited"
+    },
+    {
+      "ticker": "RENTOMOJO.NS",
+      "name": "Rentomojo Limited"
     },
     {
       "ticker": "RENUKA.NS",
@@ -7997,6 +8081,10 @@
       "name": "Saint Gobain Sekurit India Limited"
     },
     {
+      "ticker": "SELMC.NS",
+      "name": "SEL Manufacturing Company Limited"
+    },
+    {
       "ticker": "SEMAC.NS",
       "name": "Semac Construction Limited"
     },
@@ -8401,6 +8489,10 @@
       "name": "SKF India (Industrial) Limited"
     },
     {
+      "ticker": "SKIL.NS",
+      "name": "SKIL Infrastructure Limited"
+    },
+    {
       "ticker": "SKIPPER.NS",
       "name": "Skipper Limited"
     },
@@ -8533,6 +8625,10 @@
       "name": "Spectrum Electrical Industries Limited"
     },
     {
+      "ticker": "SPELS.NS",
+      "name": "SPEL Semiconductor Limited"
+    },
+    {
       "ticker": "SPENCERS.NS",
       "name": "Spencer's Retail Limited"
     },
@@ -8627,6 +8723,10 @@
     {
       "ticker": "STCINDIA.NS",
       "name": "The State Trading Corporation of India Limited"
+    },
+    {
+      "ticker": "STEAMHOUSE.NS",
+      "name": "Steamhouse India Limited"
     },
     {
       "ticker": "STEELCAS.NS",
@@ -9589,6 +9689,10 @@
       "name": "The United Nilgiri Tea Estates Company Limited"
     },
     {
+      "ticker": "UNIVAFOODS.NS",
+      "name": "Univa Foods Limited"
+    },
+    {
       "ticker": "UNIVASTU.NS",
       "name": "Univastu India Limited"
     },
@@ -9735,6 +9839,10 @@
     {
       "ticker": "VEEDOL.NS",
       "name": "Veedol Corporation Limited"
+    },
+    {
+      "ticker": "VEEGALAND.NS",
+      "name": "Veegaland Developers Limited"
     },
     {
       "ticker": "VELJAN.NS",
@@ -10273,5 +10381,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2568
+  "count": 2595
 }
