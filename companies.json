@@ -329,6 +329,10 @@
       "name": "Dr. Agarwal's Health Care Limited"
     },
     {
+      "ticker": "AGASTYAEN.NS",
+      "name": "Agastya Energy and Infrastructure Limited"
+    },
+    {
       "ticker": "AGI.NS",
       "name": "AGI Greenpac Limited"
     },
@@ -1783,6 +1787,10 @@
     {
       "ticker": "CENTEXT.NS",
       "name": "Century Extrusions Limited"
+    },
+    {
+      "ticker": "CENTEXT-RE.NS",
+      "name": "Century Extrusions Limited-RE"
     },
     {
       "ticker": "CENTRALBK.NS",
@@ -3741,8 +3749,8 @@
       "name": "HEC Infra Projects Limited"
     },
     {
-      "ticker": "HEG.NS",
-      "name": "HEG Limited"
+      "ticker": "HEGAM.NS",
+      "name": "HEG Advanced Materials Limited"
     },
     {
       "ticker": "HEIDELBERG.NS",
@@ -3763,6 +3771,10 @@
     {
       "ticker": "HEROMOTOCO.NS",
       "name": "Hero MotoCorp Limited"
+    },
+    {
+      "ticker": "HEROMOTORS.NS",
+      "name": "Hero Motors Limited"
     },
     {
       "ticker": "HESTERBIO.NS",
@@ -4611,6 +4623,10 @@
     {
       "ticker": "JSFB.NS",
       "name": "Jana Small Finance Bank Limited"
+    },
+    {
+      "ticker": "JSIPL.NS",
+      "name": "Jindal Supreme (India) Limited"
     },
     {
       "ticker": "JSL.NS",
@@ -6765,6 +6781,10 @@
       "name": "Paras Petrofils Limited"
     },
     {
+      "ticker": "PARIN.NS",
+      "name": "Parin Enterprises Limited"
+    },
+    {
       "ticker": "PARKHOSPS.NS",
       "name": "Park Medi World Limited"
     },
@@ -7913,10 +7933,6 @@
       "name": "Sanghvi Movers Limited"
     },
     {
-      "ticker": "SANGINITA.NS",
-      "name": "Sanginita Chemicals Limited"
-    },
-    {
       "ticker": "SANOFI.NS",
       "name": "Sanofi India Limited"
     },
@@ -8573,6 +8589,10 @@
       "name": "Somi Conveyor Beltings Limited"
     },
     {
+      "ticker": "SONA.NS",
+      "name": "Sonaselection India Limited"
+    },
+    {
       "ticker": "SONACOMS.NS",
       "name": "Sona BLW Precision Forgings Limited"
     },
@@ -8687,6 +8707,10 @@
     {
       "ticker": "SSDL.NS",
       "name": "Saraswati Saree Depot Limited"
+    },
+    {
+      "ticker": "SSRETAIL.NS",
+      "name": "SS Retail Limited"
     },
     {
       "ticker": "SSWL.NS",
@@ -10381,5 +10405,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2595
+  "count": 2601
 }
