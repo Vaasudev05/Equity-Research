@@ -173,6 +173,10 @@
       "name": "Ace Integrated Solutions Limited"
     },
     {
+      "ticker": "ACEVECTOR.NS",
+      "name": "AceVector Limited"
+    },
+    {
       "ticker": "ACGL.NS",
       "name": "Automobile Corporation of Goa Limited"
     },
@@ -231,6 +235,10 @@
     {
       "ticker": "ADOR.NS",
       "name": "Ador Welding Limited"
+    },
+    {
+      "ticker": "ADROITIND.NS",
+      "name": "Adroit Industries (India) Limited"
     },
     {
       "ticker": "ADROITINFO.NS",
@@ -645,6 +653,10 @@
       "name": "Anupam Rasayan India Limited"
     },
     {
+      "ticker": "AONESTEELS.NS",
+      "name": "A-One Steels India Limited"
+    },
+    {
       "ticker": "APARINDS.NS",
       "name": "Apar Industries Limited"
     },
@@ -763,6 +775,10 @@
     {
       "ticker": "ARMANFIN.NS",
       "name": "Arman Financial Services Limited"
+    },
+    {
+      "ticker": "ARMEE.NS",
+      "name": "ArMee Infotech Limited"
     },
     {
       "ticker": "AROGRANITE.NS",
@@ -963,6 +979,10 @@
     {
       "ticker": "AUGMONT.NS",
       "name": "Augmont Enterprises Limited"
+    },
+    {
+      "ticker": "AURIGROW.NS",
+      "name": "Auri Grow India Limited"
     },
     {
       "ticker": "AURIONPRO.NS",
@@ -2689,6 +2709,10 @@
       "name": "Electrotherm (India) Limited"
     },
     {
+      "ticker": "ELEVATE.NS",
+      "name": "Elevate Campuses Limited"
+    },
+    {
       "ticker": "ELGIEQUIP.NS",
       "name": "Elgi Equipments Limited"
     },
@@ -3201,6 +3225,10 @@
       "name": "Geojit Financial Services Limited"
     },
     {
+      "ticker": "GERMAN.NS",
+      "name": "German Green Steel and Power Limited"
+    },
+    {
       "ticker": "GESHIP.NS",
       "name": "The Great Eastern Shipping Company Limited"
     },
@@ -3539,6 +3567,10 @@
     {
       "ticker": "GSPCROP.NS",
       "name": "GSP Crop Science Limited"
+    },
+    {
+      "ticker": "GSPLTRANS.NS",
+      "name": "GSPL Transmission Limited"
     },
     {
       "ticker": "GSS.NS",
@@ -5973,6 +6005,10 @@
       "name": "Moneyboxx Finance Limited"
     },
     {
+      "ticker": "MONEYVIEW.NS",
+      "name": "Moneyview Limited"
+    },
+    {
       "ticker": "MONTECARLO.NS",
       "name": "Monte Carlo Fashions Limited"
     },
@@ -6635,6 +6671,10 @@
     {
       "ticker": "ORIENTBELL.NS",
       "name": "Orient Bell Limited"
+    },
+    {
+      "ticker": "ORIENTCABL.NS",
+      "name": "Orient Cables (India) Limited"
     },
     {
       "ticker": "ORIENTCEM.NS",
@@ -7763,6 +7803,10 @@
     {
       "ticker": "RUDRA.NS",
       "name": "Rudra Global Infra Products Limited"
+    },
+    {
+      "ticker": "RUNWALENTR.NS",
+      "name": "Runwal Enterprises Limited"
     },
     {
       "ticker": "RUPA.NS",
@@ -9037,6 +9081,10 @@
       "name": "Swarnsarita Jewels India Limited"
     },
     {
+      "ticker": "SWASTIKAIN.NS",
+      "name": "Swastika Infra Limited"
+    },
+    {
       "ticker": "SWELECTES.NS",
       "name": "Swelect Energy Systems Limited"
     },
@@ -9825,6 +9873,10 @@
       "name": "Vardhman Polytex Limited"
     },
     {
+      "ticker": "VARMORA.NS",
+      "name": "Varmora Granito Limited"
+    },
+    {
       "ticker": "VARROC.NS",
       "name": "Varroc Engineering Limited"
     },
@@ -10405,5 +10457,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2601
+  "count": 2614
 }
