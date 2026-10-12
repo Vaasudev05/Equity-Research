@@ -353,6 +353,10 @@
       "name": "Allcargo Global Limited"
     },
     {
+      "ticker": "AGOL.NS",
+      "name": "Ashapuri Gold Ornament Limited"
+    },
+    {
       "ticker": "AGRITECH.NS",
       "name": "Agri-Tech (India) Limited"
     },
@@ -981,10 +985,6 @@
       "name": "Augmont Enterprises Limited"
     },
     {
-      "ticker": "AURIGROW.NS",
-      "name": "Auri Grow India Limited"
-    },
-    {
       "ticker": "AURIONPRO.NS",
       "name": "Aurionpro Solutions Limited"
     },
@@ -1315,6 +1315,10 @@
     {
       "ticker": "BEL.NS",
       "name": "Bharat Electronics Limited"
+    },
+    {
+      "ticker": "BELDING.NS",
+      "name": "Belding India Limited"
     },
     {
       "ticker": "BELLACASA.NS",
@@ -1807,10 +1811,6 @@
     {
       "ticker": "CENTEXT.NS",
       "name": "Century Extrusions Limited"
-    },
-    {
-      "ticker": "CENTEXT-RE.NS",
-      "name": "Century Extrusions Limited-RE"
     },
     {
       "ticker": "CENTRALBK.NS",
@@ -6201,6 +6201,10 @@
       "name": "Natural Capsules Limited"
     },
     {
+      "ticker": "NATCO-RE.NS",
+      "name": "Natco Pharma Limited-RE"
+    },
+    {
       "ticker": "NATCOPHARM.NS",
       "name": "Natco Pharma Limited"
     },
@@ -6439,6 +6443,10 @@
     {
       "ticker": "NITTAGELA.NS",
       "name": "Nitta Gelatin India Limited"
+    },
+    {
+      "ticker": "NITYAS.NS",
+      "name": "Nityas Gems and Jewellery Limited"
     },
     {
       "ticker": "NIVABUPA.NS",
@@ -8225,6 +8233,10 @@
       "name": "Shah Alloys Limited"
     },
     {
+      "ticker": "SHAHINVEST.NS",
+      "name": "Shah Investor's Home Limited"
+    },
+    {
       "ticker": "SHAILY.NS",
       "name": "Shaily Engineering Plastics Limited"
     },
@@ -8739,6 +8751,10 @@
     {
       "ticker": "SRIKPRIND.NS",
       "name": "Sri KPR Industries Limited"
+    },
+    {
+      "ticker": "SRIT.NS",
+      "name": "SRIT India Limited"
     },
     {
       "ticker": "SRM.NS",
@@ -9581,6 +9597,10 @@
       "name": "Triveni Engineering & Industries Limited"
     },
     {
+      "ticker": "TRIVENIPT.NS",
+      "name": "Triveni Power Transmission Limited"
+    },
+    {
       "ticker": "TRU.NS",
       "name": "TruCap Finance Limited"
     },
@@ -10133,6 +10153,10 @@
       "name": "VMS TMT Limited"
     },
     {
+      "ticker": "VNL.NS",
+      "name": "Vishal Nirmiti Limited"
+    },
+    {
       "ticker": "VOEPL.NS",
       "name": "Virtuoso Optoelectronics Limited"
     },
@@ -10457,5 +10481,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2614
+  "count": 2620
 }
