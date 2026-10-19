@@ -3237,10 +3237,6 @@
       "name": "GFL Limited"
     },
     {
-      "ticker": "GFSTEELS.NS",
-      "name": "Grand Foundry Limited"
-    },
-    {
       "ticker": "GHCL.NS",
       "name": "GHCL Limited"
     },
@@ -6199,10 +6195,6 @@
     {
       "ticker": "NATCAPSUQ.NS",
       "name": "Natural Capsules Limited"
-    },
-    {
-      "ticker": "NATCO-RE.NS",
-      "name": "Natco Pharma Limited-RE"
     },
     {
       "ticker": "NATCOPHARM.NS",
@@ -9429,6 +9421,10 @@
       "name": "Tijaria Polypipes Limited"
     },
     {
+      "ticker": "TIKONA.NS",
+      "name": "Tikona Communication Limited"
+    },
+    {
       "ticker": "TIL.NS",
       "name": "TIL Limited"
     },
@@ -10481,5 +10477,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2620
+  "count": 2619
 }
