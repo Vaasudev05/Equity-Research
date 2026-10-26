@@ -1573,6 +1573,10 @@
       "name": "Bombay Dyeing & Mfg Company Limited"
     },
     {
+      "ticker": "BONFIG.NS",
+      "name": "Bonfiglioli Transmissions Limited"
+    },
+    {
       "ticker": "BONLON.NS",
       "name": "Bonlon Industries Limited"
     },
@@ -3093,6 +3097,10 @@
       "name": "Fusion Finance Limited"
     },
     {
+      "ticker": "FUSIONCX.NS",
+      "name": "Fusion CX Limited"
+    },
+    {
       "ticker": "GABRIEL.NS",
       "name": "Gabriel India Limited"
     },
@@ -3761,6 +3769,10 @@
       "name": "HDFC Life Insurance Company Limited"
     },
     {
+      "ticker": "HDFIRE.NS",
+      "name": "HD Fire Protect Limited"
+    },
+    {
       "ticker": "HDIL.NS",
       "name": "Housing Development and Infrastructure Limited"
     },
@@ -4033,8 +4045,8 @@
       "name": "ICICI Lombard General Insurance Company Limited"
     },
     {
-      "ticker": "ICICIPRULI.NS",
-      "name": "ICICI Prudential Life Insurance Company Limited"
+      "ticker": "ICICILIFE.NS",
+      "name": "ICICI Life Insurance Limited"
     },
     {
       "ticker": "ICIL.NS",
@@ -4107,6 +4119,10 @@
     {
       "ticker": "IIFLCAPS.NS",
       "name": "IIFL Capital Services Limited"
+    },
+    {
+      "ticker": "IIRM.NS",
+      "name": "IIRM Holdings India Limited"
     },
     {
       "ticker": "IITL.NS",
@@ -4923,6 +4939,10 @@
     {
       "ticker": "KHANDSE.NS",
       "name": "Khandwala Securities Limited"
+    },
+    {
+      "ticker": "KHAZANCHI.NS",
+      "name": "Khazanchi Jewellers Limited"
     },
     {
       "ticker": "KICL.NS",
@@ -6575,6 +6595,10 @@
     {
       "ticker": "OLAELEC.NS",
       "name": "Ola Electric Mobility Limited"
+    },
+    {
+      "ticker": "OLAELEC-RE.NS",
+      "name": "Ola Electric Mobility Ltd-RE"
     },
     {
       "ticker": "OLECTRA.NS",
@@ -8597,6 +8621,10 @@
       "name": "SMS Pharmaceuticals Limited"
     },
     {
+      "ticker": "SMT.NS",
+      "name": "Sahajanand Medical Technologies Limited"
+    },
+    {
       "ticker": "SNOWMAN.NS",
       "name": "Snowman Logistics Limited"
     },
@@ -8875,6 +8903,10 @@
     {
       "ticker": "SUDARSCHEM.NS",
       "name": "Sudarshan Chemical Industries Limited"
+    },
+    {
+      "ticker": "SUDARSHAN.NS",
+      "name": "Sudarshan Pharma Industries Limited"
     },
     {
       "ticker": "SUDEEPPHRM.NS",
@@ -9499,6 +9531,10 @@
     {
       "ticker": "TOLINS.NS",
       "name": "Tolins Tyres Limited"
+    },
+    {
+      "ticker": "TONBO.NS",
+      "name": "Tonbo Imaging India Limited"
     },
     {
       "ticker": "TORNTPHARM.NS",
@@ -10433,6 +10469,10 @@
       "name": "Zen Technologies Limited"
     },
     {
+      "ticker": "ZETWERK.NS",
+      "name": "Zetwerk Manufacturing Businesses Limited"
+    },
+    {
       "ticker": "ZFCVINDIA.NS",
       "name": "ZF Commercial Vehicle Control Systems India Limited"
     },
@@ -10477,5 +10517,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2619
+  "count": 2629
 }
