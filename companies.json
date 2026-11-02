@@ -117,8 +117,8 @@
       "name": "Aditya Birla Capital Limited"
     },
     {
-      "ticker": "ABCOTS.NS",
-      "name": "A B Cotspin India Limited"
+      "ticker": "ABCIND.NS",
+      "name": "ABC Industries India Limited"
     },
     {
       "ticker": "ABDL.NS",
@@ -751,6 +751,10 @@
     {
       "ticker": "ARFIN.NS",
       "name": "Arfin India Limited"
+    },
+    {
+      "ticker": "ARHAM.NS",
+      "name": "Arham Technologies Limited"
     },
     {
       "ticker": "ARIES.NS",
@@ -1571,6 +1575,10 @@
     {
       "ticker": "BOMDYEING.NS",
       "name": "Bombay Dyeing & Mfg Company Limited"
+    },
+    {
+      "ticker": "BONDADA.NS",
+      "name": "Bondada Engineering Limited"
     },
     {
       "ticker": "BONFIG.NS",
@@ -2639,6 +2647,10 @@
     {
       "ticker": "ECOSMOBLTY.NS",
       "name": "Ecos (India) Mobility & Hospitality Limited"
+    },
+    {
+      "ticker": "EDELALTS.NS",
+      "name": "EAAA India Alternatives Limited"
     },
     {
       "ticker": "EDELWEISS.NS",
@@ -4289,6 +4301,10 @@
       "name": "Indian Terrain Fashions Limited"
     },
     {
+      "ticker": "INDTONER.NS",
+      "name": "Indian Toners & Developers Limited"
+    },
+    {
       "ticker": "INDUSINDBK.NS",
       "name": "IndusInd Bank Limited"
     },
@@ -4655,6 +4671,10 @@
     {
       "ticker": "JOCIL.NS",
       "name": "Jocil Limited"
+    },
+    {
+      "ticker": "JPL.NS",
+      "name": "Jio Platforms Limited"
     },
     {
       "ticker": "JPOLYINVST.NS",
@@ -6597,10 +6617,6 @@
       "name": "Ola Electric Mobility Limited"
     },
     {
-      "ticker": "OLAELEC-RE.NS",
-      "name": "Ola Electric Mobility Ltd-RE"
-    },
-    {
       "ticker": "OLECTRA.NS",
       "name": "Olectra Greentech Limited"
     },
@@ -6839,6 +6855,10 @@
     {
       "ticker": "PARAS.NS",
       "name": "Paras Defence and Space Technologies Limited"
+    },
+    {
+      "ticker": "PARASHLTH.NS",
+      "name": "Paras Healthcare Limited"
     },
     {
       "ticker": "PARASPETRO.NS",
@@ -8351,6 +8371,10 @@
     {
       "ticker": "SHIVALIK.NS",
       "name": "Shivalik Rasayan Limited"
+    },
+    {
+      "ticker": "SHIVAM-RE1.NS",
+      "name": "Shivam Autotech Ltd-RE"
     },
     {
       "ticker": "SHIVAMAUTO.NS",
@@ -10517,5 +10541,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2629
+  "count": 2635
 }
