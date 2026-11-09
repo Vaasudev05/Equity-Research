@@ -1113,6 +1113,10 @@
       "name": "B.A.G Films and Media Limited"
     },
     {
+      "ticker": "BAHETI.NS",
+      "name": "Baheti Recycling Industries Limited"
+    },
+    {
       "ticker": "BAIDFIN.NS",
       "name": "Baid Finserv Limited"
     },
@@ -1295,6 +1299,10 @@
     {
       "ticker": "BCPL.NS",
       "name": "BCPL Railway Infrastructure Limited"
+    },
+    {
+      "ticker": "BCSSL.NS",
+      "name": "Bombay Coated and Special Steels Limited"
     },
     {
       "ticker": "BDL.NS",
@@ -1521,6 +1529,10 @@
       "name": "BLS E-Services Limited"
     },
     {
+      "ticker": "BLSPOLY.NS",
+      "name": "BLS Polymers Limited"
+    },
+    {
       "ticker": "BLUECHIP.NS",
       "name": "Blue Chip India Limited"
     },
@@ -1639,6 +1651,10 @@
     {
       "ticker": "BRIGHTBR.NS",
       "name": "Bright Brothers Limited"
+    },
+    {
+      "ticker": "BRIGHTOUTD.NS",
+      "name": "Bright Outdoor Media Limited"
     },
     {
       "ticker": "BRITANNIA.NS",
@@ -2825,6 +2841,10 @@
       "name": "Enkei Wheels (India) Limited"
     },
     {
+      "ticker": "ENNATURE.NS",
+      "name": "Ennature Bio Pharma Limited"
+    },
+    {
       "ticker": "ENRIN.NS",
       "name": "Siemens Energy India Limited"
     },
@@ -2919,6 +2939,10 @@
     {
       "ticker": "EVERESTIND.NS",
       "name": "Everest Industries Limited"
+    },
+    {
+      "ticker": "EVONILE.NS",
+      "name": "Evonile Pharma Limited"
     },
     {
       "ticker": "EXCELINDUS.NS",
@@ -4119,6 +4143,10 @@
     {
       "ticker": "IGL.NS",
       "name": "Indraprastha Gas Limited"
+    },
+    {
+      "ticker": "IGLSPIRITS.NS",
+      "name": "IGL Spirits Limited"
     },
     {
       "ticker": "IGPL.NS",
@@ -5845,6 +5873,10 @@
       "name": "Mangal Electrical Industries Limited"
     },
     {
+      "ticker": "MELSTAR.NS",
+      "name": "Melstar Information Technologies Limited"
+    },
+    {
       "ticker": "MENNPIS.NS",
       "name": "Menon Pistons Limited"
     },
@@ -5947,6 +5979,10 @@
     {
       "ticker": "MKEXIM.NS",
       "name": "M.K. Exim (India) Limited"
+    },
+    {
+      "ticker": "MKJEWELS.NS",
+      "name": "M. K. Sons Fine Jewels Limited"
     },
     {
       "ticker": "MKPL.NS",
@@ -6515,10 +6551,6 @@
     {
       "ticker": "NOVAAGRI.NS",
       "name": "Nova Agritech Limited"
-    },
-    {
-      "ticker": "NOVARTIND.NS",
-      "name": "Novartis India Limited"
     },
     {
       "ticker": "NPST.NS",
@@ -8227,6 +8259,10 @@
     {
       "ticker": "SEYAIND.NS",
       "name": "Seya Industries Limited"
+    },
+    {
+      "ticker": "SFCTECH.NS",
+      "name": "SFC Environmental Technologies Limited"
     },
     {
       "ticker": "SFL.NS",
@@ -9993,6 +10029,10 @@
       "name": "Veedol Corporation Limited"
     },
     {
+      "ticker": "VEEFIN.NS",
+      "name": "Veefin Solutions Limited"
+    },
+    {
       "ticker": "VEEGALAND.NS",
       "name": "Veegaland Developers Limited"
     },
@@ -10541,5 +10581,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2635
+  "count": 2645
 }
