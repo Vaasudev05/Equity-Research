@@ -2897,6 +2897,10 @@
       "name": "ESDS Software Solution Limited"
     },
     {
+      "ticker": "ESFL.NS",
+      "name": "Essen Speciality Films Limited"
+    },
+    {
       "ticker": "ESSARSHPNG.NS",
       "name": "Essar Shipping Limited"
     },
@@ -8409,10 +8413,6 @@
       "name": "Shivalik Rasayan Limited"
     },
     {
-      "ticker": "SHIVAM-RE1.NS",
-      "name": "Shivam Autotech Ltd-RE"
-    },
-    {
       "ticker": "SHIVAMAUTO.NS",
       "name": "Shivam Autotech Limited"
     },
@@ -9135,6 +9135,10 @@
     {
       "ticker": "SUVEN.NS",
       "name": "Suven Life Sciences Limited"
+    },
+    {
+      "ticker": "SUVID-RE.NS",
+      "name": "Suvidhaa Infoserve Limited-RE"
     },
     {
       "ticker": "SUVIDHAA.NS",
@@ -10581,5 +10585,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2645
+  "count": 2646
 }
