@@ -1641,6 +1641,10 @@
       "name": "Brahmaputra Infrastructure Limited"
     },
     {
+      "ticker": "BRAHMVIRAT.NS",
+      "name": "BRAHM VIRAT INDUSTRIES CORPORATION LIMITED"
+    },
+    {
       "ticker": "BRIGADE.NS",
       "name": "Brigade Enterprises Limited"
     },
@@ -2043,10 +2047,6 @@
     {
       "ticker": "COMPEAU.NS",
       "name": "Competent Automobiles Company Limited"
-    },
-    {
-      "ticker": "COMPINFO.NS",
-      "name": "Compuage Infocom Limited"
     },
     {
       "ticker": "COMPUSOFT.NS",
@@ -2569,10 +2569,6 @@
       "name": "D P Wires Limited"
     },
     {
-      "ticker": "DRAGARWQ.NS",
-      "name": "Dr Agarwals Eye Hospital Limited"
-    },
-    {
       "ticker": "DRCSYSTEMS.NS",
       "name": "DRC Systems India Limited"
     },
@@ -2763,10 +2759,6 @@
     {
       "ticker": "ELLEN.NS",
       "name": "Ellenbarrie Industrial Gases Limited"
-    },
-    {
-      "ticker": "ELPROINTL.NS",
-      "name": "Elpro International Limited"
     },
     {
       "ticker": "EMAMILTD.NS",
@@ -4677,6 +4669,10 @@
       "name": "JK Paper Limited"
     },
     {
+      "ticker": "JKSHAH.NS",
+      "name": "J.K.Shah Commerce Education Limited"
+    },
+    {
       "ticker": "JKTYRE.NS",
       "name": "JK Tyre & Industries Limited"
     },
@@ -5975,6 +5971,10 @@
     {
       "ticker": "MITCON.NS",
       "name": "MITCON Consultancy & Engineering Services Limited"
+    },
+    {
+      "ticker": "MITSU.NS",
+      "name": "Mitsu Chem Plast Limited"
     },
     {
       "ticker": "MITTAL.NS",
@@ -8497,8 +8497,8 @@
       "name": "Shri Jagdamba Polymers Limited"
     },
     {
-      "ticker": "SHUKRAPHAR.NS",
-      "name": "Shukra Pharmaceuticals Limited"
+      "ticker": "SHUKRAMED.NS",
+      "name": "Shukra Medtech Limited"
     },
     {
       "ticker": "SHYAMCENT.NS",
@@ -9135,10 +9135,6 @@
     {
       "ticker": "SUVEN.NS",
       "name": "Suven Life Sciences Limited"
-    },
-    {
-      "ticker": "SUVID-RE.NS",
-      "name": "Suvidhaa Infoserve Limited-RE"
     },
     {
       "ticker": "SUVIDHAA.NS",
@@ -10173,10 +10169,6 @@
       "name": "Vipul Limited"
     },
     {
-      "ticker": "VIRAT.NS",
-      "name": "Virat Industries Limited"
-    },
-    {
       "ticker": "VIRINCHI.NS",
       "name": "Virinchi Limited"
     },
@@ -10339,10 +10331,6 @@
     {
       "ticker": "WANBURY.NS",
       "name": "Wanbury Limited"
-    },
-    {
-      "ticker": "WARDINMOBI.NS",
-      "name": "Wardwizard Innovations & Mobility Limited"
     },
     {
       "ticker": "WATERBASE.NS",
@@ -10585,5 +10573,5 @@
       "name": "Zydus Wellness Limited"
     }
   ],
-  "count": 2646
+  "count": 2643
 }
